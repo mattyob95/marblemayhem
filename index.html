@@ -4,66 +4,264 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Marble Mayhem Deluxe</title>
+
 <style>
-*{box-sizing:border-box;user-select:none}
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05070b;color:#fff;font-family:Arial,Helvetica,sans-serif}
-canvas{display:block;width:100vw;height:100vh}
-#menu{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
-.panel{width:min(560px,calc(100vw - 30px));padding:28px;border-radius:18px;background:rgba(8,11,18,.95);border:1px solid rgba(255,255,255,.15);box-shadow:0 20px 80px rgba(0,0,0,.65);pointer-events:auto;backdrop-filter:blur(12px)}
-h1{margin:0 0 5px;font-size:38px}
-.subtitle{color:#9aa4b2;margin-bottom:22px}
-.row{display:flex;gap:12px;margin:12px 0}
-.row>div{flex:1}
-label{display:block;color:#aab4c2;font-size:14px;margin-bottom:5px}
-select,input,button{width:100%;border:0;border-radius:9px;padding:11px 13px;font:inherit}
-select,input{color:#fff;background:#171d28;outline:1px solid rgba(255,255,255,.08)}
-button{cursor:pointer;font-weight:bold;background:#f1f3f5;color:#080a0d;transition:transform .12s,filter .12s}
-button:hover{filter:brightness(1.1);transform:translateY(-1px)}
-#startBtn{margin-top:16px;padding:14px;font-size:17px}
-.money{padding:11px 0;color:#67e8a5;font-weight:bold}
-.controls{color:#8993a3;font-size:12px;line-height:1.7;margin-top:14px}
-#hud{position:fixed;top:15px;left:15px;right:15px;display:none;justify-content:space-between;align-items:flex-start;pointer-events:none;z-index:10}
-.hudBox{padding:9px 12px;border-radius:10px;background:rgba(0,0,0,.65);border:1px solid rgba(255,255,255,.12);text-shadow:0 2px 4px #000;backdrop-filter:blur(5px)}
-#countdown{position:fixed;inset:0;display:none;align-items:center;justify-content:center;font-size:clamp(70px,15vw,180px);font-weight:900;text-shadow:0 8px 30px #000;z-index:20;pointer-events:none}
-#finish{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:30}
-.finishPanel{width:min(600px,calc(100vw - 30px));padding:28px;border-radius:18px;background:rgba(7,10,16,.96);border:1px solid rgba(255,255,255,.16);box-shadow:0 25px 100px rgba(0,0,0,.75)}
-.finishPanel h2{margin:0 0 15px;font-size:32px}
-#results{margin:15px 0}
-.result{display:flex;justify-content:space-between;padding:8px 10px;margin:4px 0;border-radius:7px;background:rgba(255,255,255,.05)}
+*{
+  box-sizing:border-box;
+  user-select:none;
+}
+
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#05070b;
+  color:#fff;
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+canvas{
+  display:block;
+  width:100vw;
+  height:100vh;
+}
+
+#menu{
+  position:fixed;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  pointer-events:none;
+}
+
+.panel{
+  width:min(560px,calc(100vw - 30px));
+  padding:28px;
+  border-radius:18px;
+  background:rgba(8,11,18,.95);
+  border:1px solid rgba(255,255,255,.15);
+  box-shadow:0 20px 80px rgba(0,0,0,.65);
+  pointer-events:auto;
+  backdrop-filter:blur(12px);
+}
+
+h1{
+  margin:0 0 5px;
+  font-size:38px;
+}
+
+.subtitle{
+  color:#9aa4b2;
+  margin-bottom:22px;
+}
+
+.row{
+  display:flex;
+  gap:12px;
+  margin:12px 0;
+}
+
+.row>div{
+  flex:1;
+}
+
+label{
+  display:block;
+  color:#aab4c2;
+  font-size:14px;
+  margin-bottom:5px;
+}
+
+select,
+input,
+button{
+  width:100%;
+  border:0;
+  border-radius:9px;
+  padding:11px 13px;
+  font:inherit;
+}
+
+select,
+input{
+  color:#fff;
+  background:#171d28;
+  outline:1px solid rgba(255,255,255,.08);
+}
+
+button{
+  cursor:pointer;
+  font-weight:bold;
+  background:#f1f3f5;
+  color:#080a0d;
+  transition:transform .12s,filter .12s;
+}
+
+button:hover{
+  filter:brightness(1.1);
+  transform:translateY(-1px);
+}
+
+#startBtn{
+  margin-top:16px;
+  padding:14px;
+  font-size:17px;
+}
+
+.money{
+  padding:11px 0;
+  color:#67e8a5;
+  font-weight:bold;
+}
+
+.controls{
+  color:#8993a3;
+  font-size:12px;
+  line-height:1.7;
+  margin-top:14px;
+}
+
+#hud{
+  position:fixed;
+  top:15px;
+  left:15px;
+  right:15px;
+  display:none;
+  justify-content:space-between;
+  align-items:flex-start;
+  pointer-events:none;
+  z-index:10;
+}
+
+.hudBox{
+  padding:9px 12px;
+  border-radius:10px;
+  background:rgba(0,0,0,.65);
+  border:1px solid rgba(255,255,255,.12);
+  text-shadow:0 2px 4px #000;
+  backdrop-filter:blur(5px);
+}
+
+#countdown{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  font-size:clamp(70px,15vw,180px);
+  font-weight:900;
+  text-shadow:0 8px 30px #000;
+  z-index:20;
+  pointer-events:none;
+}
+
+#finish{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:30;
+}
+
+.finishPanel{
+  width:min(620px,calc(100vw - 30px));
+  max-height:90vh;
+  overflow:auto;
+  padding:28px;
+  border-radius:18px;
+  background:rgba(7,10,16,.97);
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:0 25px 100px rgba(0,0,0,.75);
+}
+
+.finishPanel h2{
+  margin:0 0 15px;
+  font-size:32px;
+}
+
+#results{
+  margin:15px 0;
+}
+
+.result{
+  display:flex;
+  justify-content:space-between;
+  padding:9px 10px;
+  margin:4px 0;
+  border-radius:7px;
+  background:rgba(255,255,255,.05);
+}
+
+.finishControls{
+  display:flex;
+  gap:10px;
+  margin-top:18px;
+}
+
+.finishControls button{
+  flex:1;
+}
+
+#newRaceBtn{
+  background:#67e8a5;
+}
 </style>
 </head>
+
 <body>
 
 <canvas id="c"></canvas>
 
 <div id="menu">
+
   <div class="panel">
+
     <h1>Marble Mayhem Deluxe</h1>
-    <div class="subtitle">Fast marbles. Twisty tracks. Maximum chaos.</div>
+
+    <div class="subtitle">
+      Fast marbles. Twisty tracks. Maximum chaos.
+    </div>
 
     <div class="row">
+
       <div>
         <label for="trackSelect">Track</label>
         <select id="trackSelect"></select>
       </div>
+
       <div>
         <label for="playerSelect">Your marble</label>
         <select id="playerSelect"></select>
       </div>
+
     </div>
 
     <div class="row">
+
       <div>
         <label for="betInput">Bet</label>
-        <input id="betInput" type="number" min="1" step="1" value="25">
+        <input
+          id="betInput"
+          type="number"
+          min="1"
+          step="1"
+          value="25"
+        >
       </div>
+
       <div>
         <label>Bank</label>
         <div class="money" id="bankDisplay">$100</div>
       </div>
+
     </div>
 
-    <button id="startBtn">START RACE</button>
+    <button id="startBtn">
+      START RACE
+    </button>
 
     <div class="controls">
       V — switch camera &nbsp; | &nbsp;
@@ -72,47 +270,116 @@ button:hover{filter:brightness(1.1);transform:translateY(-1px)}
       M — mute<br>
       1–8 — spectator follows racer
     </div>
+
   </div>
+
 </div>
 
 <div id="hud">
-  <div class="hudBox" id="hudLeft"></div>
-  <div class="hudBox" id="hudRight"></div>
+
+  <div
+    class="hudBox"
+    id="hudLeft"
+  ></div>
+
+  <div
+    class="hudBox"
+    id="hudRight"
+  ></div>
+
 </div>
 
 <div id="countdown"></div>
 
 <div id="finish">
+
   <div class="finishPanel">
-    <h2 id="finishTitle">Race Finished</h2>
+
+    <h2 id="finishTitle">
+      Race Finished
+    </h2>
+
     <div id="results"></div>
-    <button id="restartBtn">RACE AGAIN</button>
+
+    <div class="finishControls">
+
+      <button id="newRaceBtn">
+        NEW RACE
+      </button>
+
+      <button id="restartBtn">
+        SAME MARBLE
+      </button>
+
+    </div>
+
   </div>
+
 </div>
 
 <script>
 "use strict";
 
-const canvas=document.getElementById("c");
-const ctx=canvas.getContext("2d");
+/* =========================================================
+   CANVAS
+========================================================= */
 
-let W=innerWidth,H=innerHeight,DPR=Math.min(devicePixelRatio||1,2);
+const canvas=
+  document.getElementById("c");
+
+const ctx=
+  canvas.getContext("2d");
+
+let W=innerWidth;
+let H=innerHeight;
+let DPR=
+  Math.min(
+    devicePixelRatio||1,
+    2
+  );
 
 function resize(){
+
   W=innerWidth;
   H=innerHeight;
-  DPR=Math.min(devicePixelRatio||1,2);
-  canvas.width=Math.floor(W*DPR);
-  canvas.height=Math.floor(H*DPR);
-  canvas.style.width=W+"px";
-  canvas.style.height=H+"px";
-  ctx.setTransform(DPR,0,0,DPR,0,0);
+
+  DPR=
+    Math.min(
+      devicePixelRatio||1,
+      2
+    );
+
+  canvas.width=
+    Math.floor(W*DPR);
+
+  canvas.height=
+    Math.floor(H*DPR);
+
+  canvas.style.width=
+    W+"px";
+
+  canvas.style.height=
+    H+"px";
+
+  ctx.setTransform(
+    DPR,
+    0,
+    0,
+    DPR,
+    0,
+    0
+  );
 }
-addEventListener("resize",resize);
+
+addEventListener(
+  "resize",
+  resize
+);
+
 resize();
 
 /* =========================================================
-   GAME DATA
+   DATA
 ========================================================= */
 
 const names=[
@@ -164,60 +431,150 @@ const tracks=[
   "Mayhem Grand Prix"
 ];
 
-const trackSelect=document.getElementById("trackSelect");
-const playerSelect=document.getElementById("playerSelect");
-const betInput=document.getElementById("betInput");
-const bankDisplay=document.getElementById("bankDisplay");
-const menu=document.getElementById("menu");
-const hud=document.getElementById("hud");
-const hudLeft=document.getElementById("hudLeft");
-const hudRight=document.getElementById("hudRight");
-const countdown=document.getElementById("countdown");
-const finish=document.getElementById("finish");
-const finishTitle=document.getElementById("finishTitle");
-const results=document.getElementById("results");
+const trackSelect=
+  document.getElementById(
+    "trackSelect"
+  );
 
-tracks.forEach((name,i)=>{
-  const o=document.createElement("option");
-  o.value=i;
-  o.textContent=name;
-  trackSelect.appendChild(o);
-});
+const playerSelect=
+  document.getElementById(
+    "playerSelect"
+  );
 
-names.forEach((name,i)=>{
-  const o=document.createElement("option");
-  o.value=i;
-  o.textContent=name;
-  playerSelect.appendChild(o);
-});
+const betInput=
+  document.getElementById(
+    "betInput"
+  );
 
-/*
-  1400 units gives roughly 35–45 seconds depending on racer,
-  with the faster racers generally finishing around the low
-  40-second range.
-*/
+const bankDisplay=
+  document.getElementById(
+    "bankDisplay"
+  );
+
+const menu=
+  document.getElementById(
+    "menu"
+  );
+
+const hud=
+  document.getElementById(
+    "hud"
+  );
+
+const hudLeft=
+  document.getElementById(
+    "hudLeft"
+  );
+
+const hudRight=
+  document.getElementById(
+    "hudRight"
+  );
+
+const countdown=
+  document.getElementById(
+    "countdown"
+  );
+
+const finish=
+  document.getElementById(
+    "finish"
+  );
+
+const finishTitle=
+  document.getElementById(
+    "finishTitle"
+  );
+
+const results=
+  document.getElementById(
+    "results"
+  );
+
+const newRaceBtn=
+  document.getElementById(
+    "newRaceBtn"
+  );
+
+const restartBtn=
+  document.getElementById(
+    "restartBtn"
+  );
+
+tracks.forEach(
+  (name,i)=>{
+
+    const option=
+      document.createElement(
+        "option"
+      );
+
+    option.value=i;
+    option.textContent=name;
+
+    trackSelect.appendChild(
+      option
+    );
+  }
+);
+
+names.forEach(
+  (name,i)=>{
+
+    const option=
+      document.createElement(
+        "option"
+      );
+
+    option.value=i;
+    option.textContent=name;
+
+    playerSelect.appendChild(
+      option
+    );
+  }
+);
+
+/* =========================================================
+   PHYSICS
+========================================================= */
+
 const TRACK_LENGTH=1400;
+
 const ROAD_HALF=52;
+
 const MARBLE_RADIUS=5;
 
 const MAX_SPEED=44;
-const MIN_SPEED=11;
+
+const MIN_SPEED=10.5;
+
 const BASE_ACCEL=20;
 
 const ROLLING_DRAG=.0028;
+
 const AIR_DRAG=.000105;
+
 const CORNER_DRAG=.00125;
 
 const WALL_RESTITUTION=.985;
+
 const WALL_FRICTION=.999;
+
 const MARBLE_RESTITUTION=.96;
+
 const OBSTACLE_RESTITUTION=.97;
+
+/* =========================================================
+   STATE
+========================================================= */
 
 let track=[];
 let obstacles=[];
 let marble=[];
 
 let selected=0;
+
 let cameraMode="first";
 
 let raceRunning=false;
@@ -226,149 +583,244 @@ let raceFinished=false;
 let countdownActive=false;
 
 let raceTime=0;
-let lastTime=performance.now();
+
+let lastTime=
+  performance.now();
 
 let bank=100;
+
 let currentBet=25;
 
 let muted=false;
+
 let audioCtx=null;
 
 /* =========================================================
-   HELPERS
+   RANDOM
 ========================================================= */
 
-function clamp(v,min,max){
-  return Math.max(min,Math.min(max,v));
+function clamp(
+  v,
+  min,
+  max
+){
+  return Math.max(
+    min,
+    Math.min(max,v)
+  );
 }
 
-function lerp(a,b,t){
+function lerp(
+  a,
+  b,
+  t
+){
   return a+(b-a)*t;
 }
 
-function beep(freq=440,duration=.08,volume=.035){
+function randomRange(
+  min,
+  max
+){
+  return min+
+    Math.random()*
+    (max-min);
+}
+
+/* =========================================================
+   SOUND
+========================================================= */
+
+function beep(
+  freq=440,
+  duration=.08,
+  volume=.035
+){
+
   if(muted)return;
 
   try{
+
     if(!audioCtx){
-      audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+
+      audioCtx=
+        new(
+          window.AudioContext||
+          window.webkitAudioContext
+        )();
     }
 
-    const osc=audioCtx.createOscillator();
-    const gain=audioCtx.createGain();
+    const osc=
+      audioCtx.createOscillator();
 
-    osc.frequency.value=freq;
+    const gain=
+      audioCtx.createGain();
+
+    osc.frequency.value=
+      freq;
+
     osc.type="sine";
 
-    gain.gain.setValueAtTime(volume,audioCtx.currentTime);
+    gain.gain.setValueAtTime(
+      volume,
+      audioCtx.currentTime
+    );
+
     gain.gain.exponentialRampToValueAtTime(
       .0001,
-      audioCtx.currentTime+duration
+      audioCtx.currentTime+
+      duration
     );
 
     osc.connect(gain);
-    gain.connect(audioCtx.destination);
+    gain.connect(
+      audioCtx.destination
+    );
 
     osc.start();
-    osc.stop(audioCtx.currentTime+duration);
+
+    osc.stop(
+      audioCtx.currentTime+
+      duration
+    );
+
   }catch(e){}
 }
 
 /* =========================================================
-   TRACK GENERATION
+   TRACK
 ========================================================= */
-
-/*
-  The old track generator produced broad gentle curves.
-  This one deliberately creates:
-    - many more direction changes
-    - alternating left/right corners
-    - hairpins
-    - sweepers
-    - occasional S sections
-    - tighter corner groups
-*/
 
 function generateTrack(seed){
 
   const points=[];
+
   const step=4;
 
-  let rng=(seed*99991+17)>>>0;
+  let rng=
+    (seed*99991+17)>>>0;
 
   function rand(){
+
     rng^=rng<<13;
     rng^=rng>>>17;
     rng^=rng<<5;
-    return((rng>>>0)%10000)/10000;
+
+    return(
+      (rng>>>0)%10000
+    )/10000;
   }
 
   let x=0;
   let y=0;
   let angle=0;
 
-  /*
-    Build a list of many curvature zones.
-    Each zone has a center, strength and frequency.
-  */
   const zones=[];
 
-  const zoneCount=22;
+  /*
+    More corners than before.
+  */
+  const zoneCount=25;
 
-  for(let i=0;i<zoneCount;i++){
+  for(
+    let i=0;
+    i<zoneCount;
+    i++
+  ){
 
-    const center=.035+i/(zoneCount-1)*.93;
+    const center=
+      .035+
+      i/(zoneCount-1)*.93;
 
-    const direction=i%2===0?1:-1;
+    const direction=
+      i%2===0
+        ?1
+        :-1;
 
     const type=rand();
 
     let strength;
 
-    if(type<.20){
-      // Tight hairpin-ish section
-      strength=(.018+rand()*.014)*direction;
-    }else if(type<.50){
-      // Normal corner
-      strength=(.010+rand()*.010)*direction;
+    if(type<.18){
+
+      strength=
+        (.020+
+        rand()*.016)*
+        direction;
+
+    }else if(type<.52){
+
+      strength=
+        (.011+
+        rand()*.012)*
+        direction;
+
     }else{
-      // Sweeper
-      strength=(.005+rand()*.008)*direction;
+
+      strength=
+        (.005+
+        rand()*.009)*
+        direction;
     }
 
     zones.push({
+
       center,
-      width:.018+rand()*.035,
+
+      width:
+        .016+
+        rand()*.034,
+
       strength,
-      wobble:rand()*Math.PI*2
+
+      wobble:
+        rand()*Math.PI*2
     });
   }
 
-  const count=Math.floor(TRACK_LENGTH/step);
+  const count=
+    Math.floor(
+      TRACK_LENGTH/step
+    );
 
-  for(let i=0;i<count;i++){
+  for(
+    let i=0;
+    i<count;
+    i++
+  ){
 
-    const s=i*step;
-    const u=s/TRACK_LENGTH;
+    const s=
+      i*step;
+
+    const u=
+      s/TRACK_LENGTH;
 
     let turn=0;
 
-    /*
-      Strong local turns.
-    */
-    for(const z of zones){
+    for(
+      const z of zones
+    ){
 
-      const d=(u-z.center)/z.width;
+      const d=
+        (u-z.center)/
+        z.width;
 
-      if(Math.abs(d)<2.8){
+      if(
+        Math.abs(d)<3
+      ){
 
-        const envelope=Math.exp(-d*d);
+        const envelope=
+          Math.exp(
+            -d*d
+          );
 
-        turn+=z.strength*
+        turn+=
+          z.strength*
           envelope*
           (
             .72+
-            .28*Math.sin(
+            .28*
+            Math.sin(
               d*Math.PI+
               z.wobble
             )
@@ -377,24 +829,37 @@ function generateTrack(seed){
     }
 
     /*
-      Additional S-curve movement so the track rarely stays straight.
+      Extra S curves.
     */
     turn+=
-      Math.sin(u*Math.PI*2*(3.0+seed%3)+seed*.8)*.0045;
+      Math.sin(
+        u*Math.PI*2*
+        (3.2+seed%3)+
+        seed*.8
+      )*.005;
 
     turn+=
-      Math.sin(u*Math.PI*2*(7.0+seed%4)+seed*1.7)*.0027;
+      Math.sin(
+        u*Math.PI*2*
+        (7.0+seed%4)+
+        seed*1.7
+      )*.003;
 
-    /*
-      Small irregular steering noise.
-    */
     turn+=
-      Math.sin(u*Math.PI*2*17+seed)*.0013;
+      Math.sin(
+        u*Math.PI*2*17+
+        seed
+      )*.0014;
 
     angle+=turn;
 
-    x+=Math.cos(angle)*step;
-    y+=Math.sin(angle)*step;
+    x+=
+      Math.cos(angle)*
+      step;
+
+    y+=
+      Math.sin(angle)*
+      step;
 
     points.push({
       x,
@@ -404,14 +869,35 @@ function generateTrack(seed){
   }
 
   /*
-    Recalculate tangent angles from neighboring points.
+    Smooth tangent estimates.
   */
-  for(let pass=0;pass<3;pass++){
+  for(
+    let pass=0;
+    pass<3;
+    pass++
+  ){
 
-    for(let i=0;i<points.length;i++){
+    for(
+      let i=0;
+      i<points.length;
+      i++
+    ){
 
-      const a=points[Math.max(0,i-2)];
-      const b=points[Math.min(points.length-1,i+2)];
+      const a=
+        points[
+          Math.max(
+            0,
+            i-2
+          )
+        ];
+
+      const b=
+        points[
+          Math.min(
+            points.length-1,
+            i+2
+          )
+        ];
 
       points[i].angle=
         Math.atan2(
@@ -426,45 +912,93 @@ function generateTrack(seed){
 
 function sample(s){
 
-  s=clamp(
-    s,
-    0,
-    TRACK_LENGTH-.001
-  );
+  s=
+    clamp(
+      s,
+      0,
+      TRACK_LENGTH-.001
+    );
 
   const step=4;
-  const f=s/step;
-  const i=Math.floor(f);
-  const t=f-i;
 
-  const a=track[i];
-  const b=track[Math.min(i+1,track.length-1)];
+  const f=
+    s/step;
+
+  const i=
+    Math.floor(f);
+
+  const t=
+    f-i;
+
+  const a=
+    track[i];
+
+  const b=
+    track[
+      Math.min(
+        i+1,
+        track.length-1
+      )
+    ];
 
   return{
-    x:lerp(a.x,b.x,t),
-    y:lerp(a.y,b.y,t)
+    x:lerp(
+      a.x,
+      b.x,
+      t
+    ),
+    y:lerp(
+      a.y,
+      b.y,
+      t
+    )
   };
 }
 
 function tan(s){
 
-  s=clamp(
-    s,
-    0,
-    TRACK_LENGTH-.001
-  );
+  s=
+    clamp(
+      s,
+      0,
+      TRACK_LENGTH-.001
+    );
 
   const step=4;
-  const f=s/step;
-  const i=Math.floor(f);
 
-  const a=track[Math.max(0,i)];
-  const b=track[Math.min(track.length-1,i+1)];
+  const f=
+    s/step;
 
-  let dx=b.x-a.x;
-  let dy=b.y-a.y;
+  const i=
+    Math.floor(f);
 
-  const len=Math.hypot(dx,dy)||1;
+  const a=
+    track[
+      Math.max(
+        0,
+        i
+      )
+    ];
+
+  const b=
+    track[
+      Math.min(
+        track.length-1,
+        i+1
+      )
+    ];
+
+  let dx=
+    b.x-a.x;
+
+  let dy=
+    b.y-a.y;
+
+  const len=
+    Math.hypot(
+      dx,
+      dy
+    )||1;
 
   return{
     x:dx/len,
@@ -474,8 +1008,11 @@ function tan(s){
 
 function trackFrame(s){
 
-  const p=sample(s);
-  const t=tan(s);
+  const p=
+    sample(s);
+
+  const t=
+    tan(s);
 
   return{
     p,
@@ -489,11 +1026,17 @@ function trackFrame(s){
 
 function marbleWorldPosition(m){
 
-  const frame=trackFrame(m.s);
+  const frame=
+    trackFrame(m.s);
 
   return{
-    x:frame.p.x+frame.n.x*m.lane,
-    y:frame.p.y+frame.n.y*m.lane
+    x:
+      frame.p.x+
+      frame.n.x*m.lane,
+
+    y:
+      frame.p.y+
+      frame.n.y*m.lane
   };
 }
 
@@ -505,162 +1048,386 @@ function generateObstacles(seed){
 
   obstacles=[];
 
-  let rng=(seed*7777+12345)>>>0;
+  let rng=
+    (seed*7777+12345)>>>0;
 
   function rand(){
+
     rng^=rng<<13;
     rng^=rng>>>17;
     rng^=rng<<5;
-    return((rng>>>0)%10000)/10000;
+
+    return(
+      (rng>>>0)%10000
+    )/10000;
   }
 
-  /*
-    More frequent obstacles, especially around turns.
-  */
-  let s=90;
+  let s=80;
 
-  while(s<TRACK_LENGTH-60){
+  while(
+    s<
+    TRACK_LENGTH-60
+  ){
 
     s+=
       75+
-      rand()*90;
+      rand()*85;
 
-    if(s>TRACK_LENGTH-50)break;
+    if(
+      s>
+      TRACK_LENGTH-50
+    )break;
 
     obstacles.push({
+
       s,
-      lane:(rand()*2-1)*34,
-      radius:6+rand()*3,
-      type:rand()<.76?"bumper":"block"
+
+      lane:
+        (rand()*2-1)*34,
+
+      radius:
+        6+
+        rand()*3,
+
+      type:
+        rand()<.76
+          ?"bumper"
+          :"block"
     });
   }
 
   /*
-    Extra obstacle clusters.
+    Additional random obstacle groups.
   */
-  for(let i=0;i<10;i++){
+  for(
+    let i=0;
+    i<12;
+    i++
+  ){
 
     const s2=
-      100+
-      i*(TRACK_LENGTH-180)/10+
+      90+
+      i*
+      (TRACK_LENGTH-180)/12+
       rand()*55;
 
     obstacles.push({
+
       s:s2,
-      lane:(rand()*2-1)*30,
-      radius:6+rand()*2,
-      type:"bumper"
+
+      lane:
+        (rand()*2-1)*36,
+
+      radius:
+        6+
+        rand()*3,
+
+      type:
+        rand()<.8
+          ?"bumper"
+          :"block"
     });
   }
 }
 
 /* =========================================================
-   MARBLES
+   RACER PERSONALITIES
+========================================================= */
+
+/*
+  These differences are intentionally meaningful.
+
+  speed:
+    maximum cruising potential
+
+  accel:
+    how quickly the marble gets there
+
+  corner:
+    speed retention in turns
+
+  chaos:
+    tendency to change lane / take risks
+
+  variance:
+    temporary performance variation
+*/
+
+const racerProfiles=[
+
+  {
+    speed:1.00,
+    accel:1.00,
+    corner:1.00,
+    chaos:.90,
+    variance:.035
+  },
+
+  {
+    speed:1.035,
+    accel:1.06,
+    corner:.94,
+    chaos:1.15,
+    variance:.045
+  },
+
+  {
+    speed:.985,
+    accel:.98,
+    corner:1.10,
+    chaos:.75,
+    variance:.028
+  },
+
+  {
+    speed:1.025,
+    accel:1.03,
+    corner:.91,
+    chaos:1.30,
+    variance:.055
+  },
+
+  {
+    speed:1.005,
+    accel:1.01,
+    corner:1.04,
+    chaos:.85,
+    variance:.038
+  },
+
+  {
+    speed:1.055,
+    accel:1.08,
+    corner:.88,
+    chaos:1.40,
+    variance:.06
+  },
+
+  {
+    speed:.975,
+    accel:.96,
+    corner:1.12,
+    chaos:1.00,
+    variance:.032
+  },
+
+  {
+    speed:1.015,
+    accel:1.02,
+    corner:.99,
+    chaos:1.08,
+    variance:.05
+  }
+
+];
+
+/* =========================================================
+   CREATE MARBLES
 ========================================================= */
 
 function createMarbles(){
 
   marble=[];
 
-  const stats=[
-    {accel:1.00,grip:1.00,mass:1.00},
-    {accel:1.05,grip:.96,mass:1.02},
-    {accel:.98,grip:1.08,mass:.96},
-    {accel:1.03,grip:.92,mass:1.06},
-    {accel:1.01,grip:1.02,mass:1.00},
-    {accel:1.08,grip:.90,mass:.94},
-    {accel:.97,grip:1.10,mass:1.08},
-    {accel:1.02,grip:.98,mass:1.01}
-  ];
+  for(
+    let i=0;
+    i<names.length;
+    i++
+  ){
 
-  for(let i=0;i<names.length;i++){
+    const p=
+      racerProfiles[i];
 
     const startSpeed=
-      21.5+
-      Math.random()*2.5;
+      randomRange(
+        20.5,
+        24.5
+      );
+
+    /*
+      Each race gets a different initial lane.
+    */
+    const startingLane=
+      (i-3.5)*7.2+
+      randomRange(
+        -3.2,
+        3.2
+      );
 
     marble.push({
 
       id:i,
+
       name:names[i],
+
       color:colors[i],
 
-      s:-i*5,
+      s:
+        -i*5+
+        randomRange(
+          -2,
+          2
+        ),
 
       v:startSpeed,
 
-      lane:(i-3.5)*7.2,
-      laneV:0,
+      lane:startingLane,
 
-      radius:MARBLE_RADIUS,
+      laneV:
+        randomRange(
+          -1.2,
+          1.2
+        ),
 
-      accelMul:stats[i].accel,
-      grip:stats[i].grip,
-      mass:stats[i].mass,
+      radius:
+        MARBLE_RADIUS,
+
+      speedMul:p.speed,
+
+      accelMul:p.accel,
+
+      cornerMul:p.corner,
+
+      chaos:p.chaos,
+
+      variance:p.variance,
+
+      /*
+        Every marble has its own race rhythm.
+      */
+      rhythm:
+        randomRange(
+          1.4,
+          2.5
+        ),
+
+      rhythmPhase:
+        randomRange(
+          0,
+          Math.PI*2
+        ),
+
+      randomSeed:
+        Math.random()*10000,
 
       finished:false,
+
       finishTime:0,
+
       place:0,
 
       hitFlash:0,
 
-      wobble:Math.random()*Math.PI*2,
+      wobble:
+        Math.random()*
+        Math.PI*2,
+
+      spin:
+        Math.random()*
+        Math.PI*2,
+
+      lastS:
+        -i*5,
+
+      texturePhase:
+        Math.random()*
+        Math.PI*2,
 
       /*
-        spin is actual rolling angle.
-        It advances from distance traveled / radius.
+        Temporary performance boosts.
       */
-      spin:Math.random()*Math.PI*2,
+      boostTimer:0,
 
-      lastS:-i*5,
+      boostPower:0,
 
       /*
-        Additional visual rotation phases make the
-        surface pattern look less symmetrical.
+        Lane-change target.
       */
-      texturePhase:Math.random()*Math.PI*2
+      desiredLane:
+        startingLane,
+
+      laneChangeTimer:
+        randomRange(
+          .5,
+          2
+        ),
+
+      /*
+        Used for visual speed.
+      */
+      recentSpeed:startSpeed
     });
   }
 }
 
 /* =========================================================
-   PHYSICS
+   WALLS
 ========================================================= */
 
 function resolveWall(m){
 
-  const limit=ROAD_HALF-m.radius;
+  const limit=
+    ROAD_HALF-
+    m.radius;
 
-  if(m.lane>limit){
+  if(
+    m.lane>
+    limit
+  ){
 
     m.lane=limit;
 
     if(m.laneV>0){
+
       m.laneV=
         -m.laneV*
         WALL_RESTITUTION;
     }
 
-    m.laneV*=WALL_FRICTION;
+    m.laneV*=
+      WALL_FRICTION;
+
+    /*
+      Wall impacts can randomly give a small
+      change in momentum.
+    */
+    m.v*=.996;
   }
 
-  if(m.lane<-limit){
+  if(
+    m.lane<
+    -limit
+  ){
 
     m.lane=-limit;
 
     if(m.laneV<0){
+
       m.laneV=
         -m.laneV*
         WALL_RESTITUTION;
     }
 
-    m.laneV*=WALL_FRICTION;
+    m.laneV*=
+      WALL_FRICTION;
+
+    m.v*=.996;
   }
 }
 
-function resolveObstacle(m,o){
+/* =========================================================
+   OBSTACLE COLLISION
+========================================================= */
 
-  const ds=Math.abs(o.s-m.s);
+function resolveObstacle(
+  m,
+  o
+){
+
+  const ds=
+    Math.abs(
+      o.s-m.s
+    );
 
   if(ds>12)return;
 
@@ -668,66 +1435,135 @@ function resolveObstacle(m,o){
     o.lane-m.lane;
 
   const minDist=
-    o.radius+m.radius;
+    o.radius+
+    m.radius;
 
-  if(Math.abs(laneDistance)<minDist){
+  if(
+    Math.abs(
+      laneDistance
+    )<minDist
+  ){
 
     const sign=
-      laneDistance>=0?-1:1;
+      laneDistance>=0
+        ?-1
+        :1;
 
     const overlap=
       minDist-
-      Math.abs(laneDistance);
+      Math.abs(
+        laneDistance
+      );
 
     m.lane+=
       sign*
       (overlap+.15);
 
-    m.laneV+=sign*16;
-    m.laneV*=OBSTACLE_RESTITUTION;
+    m.laneV+=
+      sign*
+      randomRange(
+        13,
+        20
+      );
 
-    m.hitFlash=.12;
+    m.laneV*=
+      OBSTACLE_RESTITUTION;
+
+    /*
+      Bumper hit can cause a temporary boost or slowdown.
+    */
+    if(
+      Math.random()<.30
+    ){
+
+      m.boostTimer=
+        randomRange(
+          .5,
+          1.2
+        );
+
+      m.boostPower=
+        randomRange(
+          -.10,
+          .12
+        );
+    }
+
+    m.hitFlash=.16;
   }
 }
 
+/* =========================================================
+   MARBLE COLLISIONS
+========================================================= */
+
 function resolveMarbleCollisions(){
 
-  for(let i=0;i<marble.length;i++){
+  for(
+    let i=0;
+    i<marble.length;
+    i++
+  ){
 
-    const a=marble[i];
+    const a=
+      marble[i];
 
-    if(a.finished)continue;
+    if(a.finished)
+      continue;
 
-    for(let j=i+1;j<marble.length;j++){
+    for(
+      let j=i+1;
+      j<marble.length;
+      j++
+    ){
 
-      const b=marble[j];
+      const b=
+        marble[j];
 
-      if(b.finished)continue;
+      if(b.finished)
+        continue;
 
-      let ds=b.s-a.s;
+      let ds=
+        b.s-a.s;
 
-      if(ds>TRACK_LENGTH/2)
-        ds-=TRACK_LENGTH;
+      if(
+        ds>
+        TRACK_LENGTH/2
+      )
+        ds-=
+          TRACK_LENGTH;
 
-      if(ds<-TRACK_LENGTH/2)
-        ds+=TRACK_LENGTH;
+      if(
+        ds<
+        -TRACK_LENGTH/2
+      )
+        ds+=
+          TRACK_LENGTH;
 
       const dl=
         b.lane-a.lane;
 
       const dist=
-        Math.hypot(ds,dl);
+        Math.hypot(
+          ds,
+          dl
+        );
 
       const minDist=
-        a.radius+b.radius;
+        a.radius+
+        b.radius;
 
       if(
         dist>=minDist||
         dist<.001
-      )continue;
+      )
+        continue;
 
-      const nx=ds/dist;
-      const ny=dl/dist;
+      const nx=
+        ds/dist;
+
+      const ny=
+        dl/dist;
 
       const relV=
         (b.v-a.v)*nx+
@@ -735,8 +1571,11 @@ function resolveMarbleCollisions(){
 
       if(relV<0){
 
-        const invA=1/a.mass;
-        const invB=1/b.mass;
+        const invA=
+          1/a.mass;
+
+        const invB=
+          1/b.mass;
 
         const impulse=
           -(1+MARBLE_RESTITUTION)*
@@ -762,45 +1601,411 @@ function resolveMarbleCollisions(){
           impulse*
           invB*
           ny;
+
+        /*
+          Collision turbulence.
+        */
+        if(
+          Math.random()<.24
+        ){
+
+          if(
+            Math.random()<.5
+          ){
+
+            a.v+=
+              randomRange(
+                -1.2,
+                1.2
+              );
+
+          }else{
+
+            b.v+=
+              randomRange(
+                -1.2,
+                1.2
+              );
+          }
+        }
       }
 
       const push=
-        (minDist-dist)*.52;
+        (minDist-dist)*.55;
 
-      a.s-=nx*push;
-      a.lane-=ny*push;
+      a.s-=
+        nx*push;
 
-      b.s+=nx*push;
-      b.lane+=ny*push;
+      a.lane-=
+        ny*push;
 
-      a.v=clamp(
-        a.v,
-        MIN_SPEED,
-        MAX_SPEED
-      );
+      b.s+=
+        nx*push;
 
-      b.v=clamp(
-        b.v,
-        MIN_SPEED,
-        MAX_SPEED
-      );
+      b.lane+=
+        ny*push;
+
+      a.v=
+        clamp(
+          a.v,
+          MIN_SPEED,
+          MAX_SPEED*
+          a.speedMul
+        );
+
+      b.v=
+        clamp(
+          b.v,
+          MIN_SPEED,
+          MAX_SPEED*
+          b.speedMul
+        );
     }
   }
 }
 
-function updateMarble(m,dt){
+/* =========================================================
+   DRAFTING
+========================================================= */
 
-  if(m.finished)return;
+function getDraftBoost(m){
+
+  let boost=0;
+
+  for(
+    const other of marble
+  ){
+
+    if(
+      other===m||
+      other.finished
+    )
+      continue;
+
+    const ds=
+      other.s-m.s;
+
+    /*
+      Only draft from someone directly ahead.
+    */
+    if(
+      ds>3&&
+      ds<38
+    ){
+
+      const laneGap=
+        Math.abs(
+          other.lane-
+          m.lane
+        );
+
+      if(
+        laneGap<22
+      ){
+
+        const distanceFactor=
+          1-
+          ds/38;
+
+        const laneFactor=
+          1-
+          laneGap/22;
+
+        boost+=
+          .65*
+          distanceFactor*
+          laneFactor;
+      }
+    }
+  }
+
+  return clamp(
+    boost,
+    0,
+    1.2
+  );
+}
+
+/* =========================================================
+   OVERTAKING / LANE CHANGES
+========================================================= */
+
+function updateRacingLine(
+  m,
+  dt
+){
+
+  m.laneChangeTimer-=dt;
+
+  /*
+    Look for racers directly ahead.
+  */
+  let blocker=null;
+  let closest=9999;
+
+  for(
+    const other of marble
+  ){
+
+    if(
+      other===m||
+      other.finished
+    )
+      continue;
+
+    const ds=
+      other.s-m.s;
+
+    const lateral=
+      Math.abs(
+        other.lane-
+        m.lane
+      );
+
+    if(
+      ds>1&&
+      ds<34&&
+      lateral<13&&
+      ds<closest
+    ){
+
+      closest=ds;
+      blocker=other;
+    }
+  }
+
+  /*
+    Decide on a new lane.
+  */
+  if(
+    m.laneChangeTimer<=0
+  ){
+
+    let target=
+      m.lane;
+
+    if(blocker){
+
+      /*
+        Try one side or the other.
+      */
+      const preferred=
+        Math.random()<.5
+          ?-1
+          :1;
+
+      target=
+        blocker.lane+
+        preferred*
+        randomRange(
+          16,
+          29
+        );
+
+      /*
+        If that side is occupied, try opposite.
+      */
+      for(
+        const other of marble
+      ){
+
+        if(
+          other===m||
+          other===blocker||
+          other.finished
+        )
+          continue;
+
+        if(
+          Math.abs(
+            other.s-
+            m.s
+          )<28&&
+          Math.abs(
+            other.lane-
+            target
+          )<13
+        ){
+
+          target=
+            blocker.lane-
+            preferred*
+            randomRange(
+              16,
+              29
+            );
+
+          break;
+        }
+      }
+
+    }else{
+
+      /*
+        Normal racing line.
+        Random movement increases the chance
+        of overtakes without looking ridiculous.
+      */
+      if(
+        Math.random()<
+        .36*m.chaos
+      ){
+
+        target=
+          randomRange(
+            -35,
+            35
+          );
+      }
+    }
+
+    /*
+      Never intentionally aim outside the walls.
+    */
+    m.desiredLane=
+      clamp(
+        target,
+        -38,
+        38
+      );
+
+    m.laneChangeTimer=
+      randomRange(
+        .7,
+        1.8
+      )/
+      m.chaos;
+  }
+
+  const laneDifference=
+    m.desiredLane-
+    m.lane;
+
+  /*
+    Steering strength.
+  */
+  m.laneV+=
+    clamp(
+      laneDifference*
+      .9,
+      -15,
+      15
+    )*
+    dt;
+
+  /*
+    Chaos produces slightly more aggressive
+    lateral movement.
+  */
+  m.laneV+=
+    Math.sin(
+      raceTime*
+      m.rhythm+
+      m.rhythmPhase
+    )*
+    .08*
+    m.chaos*
+    dt;
+}
+
+/* =========================================================
+   MARBLE UPDATE
+========================================================= */
+
+function updateMarble(
+  m,
+  dt
+){
+
+  if(m.finished)
+    return;
+
+  /*
+    Temporary performance variation.
+
+    This is deliberately smooth rather than
+    pure frame-to-frame randomness.
+  */
+  const raceWave=
+    Math.sin(
+      raceTime*
+      m.rhythm+
+      m.rhythmPhase
+    )*
+    m.variance;
+
+  const randomWave=
+    Math.sin(
+      raceTime*.47+
+      m.randomSeed
+    )*
+    m.variance*.65;
+
+  let performance=
+    1+
+    raceWave+
+    randomWave;
+
+  /*
+    Temporary collision boost.
+  */
+  if(
+    m.boostTimer>0
+  ){
+
+    m.boostTimer-=dt;
+
+    performance+=
+      m.boostPower;
+  }
+
+  /*
+    Drafting.
+  */
+  const draft=
+    getDraftBoost(m);
+
+  performance+=
+    draft*.018;
+
+  const effectiveMax=
+    MAX_SPEED*
+    m.speedMul*
+    performance;
 
   const speedRatio=
-    m.v/MAX_SPEED;
+    clamp(
+      m.v/effectiveMax,
+      0,
+      1.2
+    );
 
+  /*
+    Acceleration.
+  */
   const acceleration=
     BASE_ACCEL*
     m.accelMul*
-    (1-speedRatio*.58);
+    performance*
+    (
+      1-
+      speedRatio*.60
+    );
 
-  m.v+=acceleration*dt;
+  m.v+=
+    acceleration*
+    dt;
+
+  /*
+    Draft gives an actual push.
+  */
+  if(draft>0){
+
+    m.v+=
+      draft*
+      .85*
+      dt;
+  }
 
   m.v-=
     m.v*
@@ -814,19 +2019,26 @@ function updateMarble(m,dt){
     dt;
 
   /*
-    Detect actual curvature ahead.
-    More curvature = a little more speed scrub,
-    but nowhere near enough to make the race slow.
+    Corner detection.
+
+    Sample farther ahead so tighter corners have
+    a visible effect.
   */
   const ahead=
-    trackFrame(m.s+18);
+    trackFrame(
+      m.s+24
+    );
 
   const here=
-    trackFrame(m.s);
+    trackFrame(
+      m.s
+    );
 
   const dot=
-    ahead.t.x*here.t.x+
-    ahead.t.y*here.t.y;
+    ahead.t.x*
+    here.t.x+
+    ahead.t.y*
+    here.t.y;
 
   const cornerAmount=
     Math.max(
@@ -834,76 +2046,131 @@ function updateMarble(m,dt){
       1-dot
     );
 
+  /*
+    Racer-specific corner skill.
+  */
   m.v-=
     m.v*
     cornerAmount*
     CORNER_DRAG*
+    dt/
+    m.cornerMul;
+
+  /*
+    Occasional small momentum variation.
+  */
+  m.v+=
+    Math.sin(
+      raceTime*.73+
+      m.randomSeed
+    )*
+    .018*
     dt;
 
-  m.v=clamp(
-    m.v,
-    MIN_SPEED,
-    MAX_SPEED
+  m.v=
+    clamp(
+      m.v,
+      MIN_SPEED,
+      effectiveMax
+    );
+
+  /*
+    Overtaking behavior.
+  */
+  updateRacingLine(
+    m,
+    dt
   );
 
   /*
-    Lane stabilization.
+    Lateral physics.
   */
   m.laneV*=
-    Math.pow(.35,dt);
-
-  m.laneV+=
-    (-m.lane*
-    .075*
-    m.grip)*
-    dt;
+    Math.pow(
+      .34,
+      dt
+    );
 
   /*
-    Tiny racing-line wobble.
+    Keep steering responsive.
   */
   m.laneV+=
-    Math.sin(
-      raceTime*2.2+
-      m.wobble
+    (
+      -m.lane*
+      .055*
+      m.grip+
+      (
+        m.desiredLane-
+        m.lane
+      )*
+      .24*
+      m.chaos
     )*
-    .065*
     dt;
 
   m.lane+=
     m.laneV*
     dt;
 
-  const oldS=m.s;
+  /*
+    Forward movement.
+  */
+  const oldS=
+    m.s;
 
   m.s+=
     m.v*
     dt;
 
   /*
-    PHYSICAL ROLLING:
-    angular rotation = distance / radius.
+    Physical rolling rotation.
   */
-  const distanceTravelled=
+  const distance=
     m.s-oldS;
 
   m.spin+=
-    distanceTravelled/
+    distance/
     m.radius;
 
-  m.lastS=m.s;
+  m.lastS=
+    m.s;
+
+  /*
+    Keep recent speed for rendering.
+  */
+  m.recentSpeed=
+    lerp(
+      m.recentSpeed,
+      m.v,
+      clamp(
+        dt*8,
+        0,
+        1
+      )
+    );
 
   resolveWall(m);
 
-  for(const o of obstacles)
-    resolveObstacle(m,o);
+  for(
+    const o of obstacles
+  ){
+
+    resolveObstacle(
+      m,
+      o
+    );
+  }
 
   resolveWall(m);
 
-  m.v=clamp(
-    m.v,
-    MIN_SPEED,
-    MAX_SPEED
-  );
+  m.v=
+    clamp(
+      m.v,
+      MIN_SPEED,
+      MAX_SPEED*
+      m.speedMul*
+      1.08
+    );
 
   m.hitFlash=
     Math.max(
@@ -911,20 +2178,33 @@ function updateMarble(m,dt){
       m.hitFlash-dt
     );
 
-  if(m.s>=TRACK_LENGTH){
+  /*
+    Finish.
+  */
+  if(
+    m.s>=TRACK_LENGTH
+  ){
 
     m.finished=true;
-    m.finishTime=raceTime;
+
+    m.finishTime=
+      raceTime;
 
     m.place=
       marble.filter(
         x=>x.finished
       ).length;
 
-    m.s=TRACK_LENGTH;
+    m.s=
+      TRACK_LENGTH;
+
     m.v=0;
   }
 }
+
+/* =========================================================
+   UPDATE
+========================================================= */
 
 function update(dt){
 
@@ -933,12 +2213,20 @@ function update(dt){
     paused||
     raceFinished||
     countdownActive
-  )return;
+  )
+    return;
 
   raceTime+=dt;
 
-  for(const m of marble)
-    updateMarble(m,dt);
+  for(
+    const m of marble
+  ){
+
+    updateMarble(
+      m,
+      dt
+    );
+  }
 
   resolveMarbleCollisions();
 
@@ -947,6 +2235,7 @@ function update(dt){
       m=>m.finished
     )
   ){
+
     finishRace();
   }
 }
@@ -957,7 +2246,8 @@ function update(dt){
 
 function getFirstPersonCamera(){
 
-  const me=marble[selected];
+  const me=
+    marble[selected];
 
   const frame=
     trackFrame(me.s);
@@ -966,6 +2256,7 @@ function getFirstPersonCamera(){
     marbleWorldPosition(me);
 
   return{
+
     x:
       pos.x-
       frame.t.x*5,
@@ -986,7 +2277,8 @@ function getFirstPersonCamera(){
 
 function getSpectatorCamera(){
 
-  const me=marble[selected];
+  const me=
+    marble[selected];
 
   const frame=
     trackFrame(me.s);
@@ -994,18 +2286,13 @@ function getSpectatorCamera(){
   const pos=
     marbleWorldPosition(me);
 
-  /*
-    TRUE chase/drone camera.
-
-    It sits substantially behind and above
-    the selected marble and looks well ahead.
-  */
   const behind=125;
   const side=12;
   const height=150;
   const lookAhead=175;
 
   return{
+
     x:
       pos.x-
       frame.t.x*behind+
@@ -1026,13 +2313,14 @@ function getSpectatorCamera(){
 
     height,
 
-    pitch:0.96
+    pitch:.96
   };
 }
 
-/*
-  First-person projection.
-*/
+/* =========================================================
+   PROJECTION
+========================================================= */
+
 function project3D(
   x,
   y,
@@ -1043,8 +2331,11 @@ function project3D(
   cameraHeight
 ){
 
-  const dx=x-cameraX;
-  const dy=y-cameraY;
+  const dx=
+    x-cameraX;
+
+  const dy=
+    y-cameraY;
 
   let fx=
     lookX-cameraX;
@@ -1053,7 +2344,10 @@ function project3D(
     lookY-cameraY;
 
   const len=
-    Math.hypot(fx,fy)||1;
+    Math.hypot(
+      fx,
+      fy
+    )||1;
 
   fx/=len;
   fy/=len;
@@ -1084,12 +2378,15 @@ function project3D(
 
   const groundY=
     horizon+
-    cameraHeight*scale;
+    cameraHeight*
+    scale;
 
   return{
+
     x:
       W/2+
-      side*scale,
+      side*
+      scale,
 
     y:
       groundY,
@@ -1099,14 +2396,6 @@ function project3D(
   };
 }
 
-/*
-  Proper pitched 3D-ish spectator projection.
-
-  Unlike the previous spectator projection, this
-  actually accounts for camera pitch and camera height.
-  Farther track goes toward the horizon while nearby
-  track expands toward the bottom of the screen.
-*/
 function projectSpectator3D(
   x,
   y,
@@ -1121,13 +2410,18 @@ function projectSpectator3D(
     y-camera.y;
 
   let fx=
-    camera.lookX-camera.x;
+    camera.lookX-
+    camera.x;
 
   let fy=
-    camera.lookY-camera.y;
+    camera.lookY-
+    camera.y;
 
   const len=
-    Math.hypot(fx,fy)||1;
+    Math.hypot(
+      fx,
+      fy
+    )||1;
 
   fx/=len;
   fy/=len;
@@ -1149,41 +2443,39 @@ function projectSpectator3D(
   const pitch=
     camera.pitch;
 
-  /*
-    Camera forward vector:
-      horizontal*cos(pitch)
-      vertical  -sin(pitch)
-  */
   const depth=
-    horizontalDepth*Math.cos(pitch)-
-    vertical*Math.sin(pitch);
+    horizontalDepth*
+    Math.cos(pitch)-
+    vertical*
+    Math.sin(pitch);
 
   if(depth<5)
     return null;
 
-  /*
-    Camera up vector:
-      horizontal*sin(pitch)
-      vertical  cos(pitch)
-  */
   const cameraVertical=
-    horizontalDepth*Math.sin(pitch)+
-    vertical*Math.cos(pitch);
+    horizontalDepth*
+    Math.sin(pitch)+
+    vertical*
+    Math.cos(pitch);
 
   const focal=
-    Math.min(W,H)*1.18;
+    Math.min(W,H)*
+    1.18;
 
   const scale=
     focal/depth;
 
   return{
+
     x:
       W/2+
-      side*scale,
+      side*
+      scale,
 
     y:
       H*.50-
-      cameraVertical*scale,
+      cameraVertical*
+      scale,
 
     scale,
     depth
@@ -1198,21 +2490,45 @@ function drawBackground(){
 
   const g=
     ctx.createLinearGradient(
-      0,0,0,H
+      0,
+      0,
+      0,
+      H
     );
 
-  g.addColorStop(0,"#070a12");
-  g.addColorStop(.42,"#101727");
-  g.addColorStop(1,"#05070b");
+  g.addColorStop(
+    0,
+    "#070a12"
+  );
+
+  g.addColorStop(
+    .42,
+    "#101727"
+  );
+
+  g.addColorStop(
+    1,
+    "#05070b"
+  );
 
   ctx.fillStyle=g;
-  ctx.fillRect(0,0,W,H);
+
+  ctx.fillRect(
+    0,
+    0,
+    W,
+    H
+  );
 
   ctx.save();
 
   ctx.globalAlpha=.35;
 
-  for(let i=0;i<100;i++){
+  for(
+    let i=0;
+    i<100;
+    i++
+  ){
 
     const x=
       (i*137.7)%W;
@@ -1221,6 +2537,7 @@ function drawBackground(){
       (i*71.3)%(H*.45);
 
     ctx.fillStyle="#fff";
+
     ctx.fillRect(
       x,
       y,
@@ -1233,22 +2550,8 @@ function drawBackground(){
 }
 
 /* =========================================================
-   REALISTIC MARBLE RENDERING
+   MARBLE DRAW
 ========================================================= */
-
-/*
-  The marble is no longer just a gradient with a rotating
-  ellipse.
-
-  It now has:
-    - spherical shading
-    - multiple asymmetric longitude bands
-    - rotating curved surface strips
-    - a moving specular highlight
-    - a rolling contact shadow
-    - velocity-based motion streak
-    - slight squash/stretch from speed
-*/
 
 function drawRollingMarble(
   x,
@@ -1261,12 +2564,20 @@ function drawRollingMarble(
   speed=20
 ){
 
-  if(r<.45)return;
+  if(r<.45)
+    return;
 
   ctx.save();
 
+  const speedFactor=
+    clamp(
+      speed/MAX_SPEED,
+      0,
+      1
+    );
+
   /*
-    Contact shadow.
+    Shadow.
   */
   const shadow=
     ctx.createRadialGradient(
@@ -1310,23 +2621,14 @@ function drawRollingMarble(
   ctx.fill();
 
   /*
-    Speed deformation.
-    Slightly stretched horizontally in the
-    direction of travel.
+    Slight speed stretch.
   */
-  const speedFactor=
-    clamp(
-      speed/44,
-      0,
-      1
-    );
-
   const stretch=
     1+
     speedFactor*.045;
 
   /*
-    Base spherical gradient.
+    Spherical base.
   */
   const g=
     ctx.createRadialGradient(
@@ -1338,12 +2640,35 @@ function drawRollingMarble(
       r*1.05
     );
 
-  g.addColorStop(0,"#ffffff");
-  g.addColorStop(.11,"#ffffff");
-  g.addColorStop(.22,color);
-  g.addColorStop(.68,color);
-  g.addColorStop(.88,"#111");
-  g.addColorStop(1,"#020202");
+  g.addColorStop(
+    0,
+    "#fff"
+  );
+
+  g.addColorStop(
+    .11,
+    "#fff"
+  );
+
+  g.addColorStop(
+    .22,
+    color
+  );
+
+  g.addColorStop(
+    .68,
+    color
+  );
+
+  g.addColorStop(
+    .88,
+    "#111"
+  );
+
+  g.addColorStop(
+    1,
+    "#020202"
+  );
 
   ctx.fillStyle=g;
 
@@ -1362,7 +2687,7 @@ function drawRollingMarble(
   ctx.fill();
 
   /*
-    Everything below is clipped to the sphere.
+    Clip texture to sphere.
   */
   ctx.save();
 
@@ -1380,19 +2705,27 @@ function drawRollingMarble(
 
   ctx.clip();
 
-  ctx.translate(x,y);
+  ctx.translate(
+    x,
+    y
+  );
 
   /*
-    The texture rotates according to actual physical
-    rolling spin.
+    Real rolling spin.
   */
   ctx.rotate(spin);
 
   /*
-    Strong rotating equatorial band.
+    Main white equator.
   */
-  ctx.strokeStyle="rgba(255,255,255,.94)";
-  ctx.lineWidth=Math.max(1.3,r*.16);
+  ctx.strokeStyle=
+    "rgba(255,255,255,.95)";
+
+  ctx.lineWidth=
+    Math.max(
+      1.3,
+      r*.16
+    );
 
   ctx.beginPath();
 
@@ -1409,12 +2742,20 @@ function drawRollingMarble(
   ctx.stroke();
 
   /*
-    Second asymmetric band.
+    Second band.
   */
-  ctx.rotate(Math.PI*.37);
+  ctx.rotate(
+    Math.PI*.37
+  );
 
-  ctx.strokeStyle="rgba(255,255,255,.62)";
-  ctx.lineWidth=Math.max(1,r*.105);
+  ctx.strokeStyle=
+    "rgba(255,255,255,.62)";
+
+  ctx.lineWidth=
+    Math.max(
+      1,
+      r*.105
+    );
 
   ctx.beginPath();
 
@@ -1431,12 +2772,20 @@ function drawRollingMarble(
   ctx.stroke();
 
   /*
-    Dark band provides obvious visual contrast.
+    Dark stripe.
   */
-  ctx.rotate(Math.PI*.43);
+  ctx.rotate(
+    Math.PI*.43
+  );
 
-  ctx.strokeStyle="rgba(0,0,0,.62)";
-  ctx.lineWidth=Math.max(1,r*.13);
+  ctx.strokeStyle=
+    "rgba(0,0,0,.62)";
+
+  ctx.lineWidth=
+    Math.max(
+      1,
+      r*.13
+    );
 
   ctx.beginPath();
 
@@ -1453,11 +2802,13 @@ function drawRollingMarble(
   ctx.stroke();
 
   /*
-    Curved longitude stripes.
-    Their horizontal radius changes with the spin phase,
-    making them look like they wrap around a sphere.
+    Curved longitude lines.
   */
-  for(let i=-2;i<=2;i++){
+  for(
+    let i=-2;
+    i<=2;
+    i++
+  ){
 
     const phase=
       spin+
@@ -1483,7 +2834,8 @@ function drawRollingMarble(
     ctx.beginPath();
 
     ctx.ellipse(
-      Math.sin(phase)*r*.32,
+      Math.sin(phase)*
+      r*.32,
       0,
       r*width*.38,
       r*.96,
@@ -1496,17 +2848,22 @@ function drawRollingMarble(
   }
 
   /*
-    Small colored/dark surface patch rotating around
-    the marble. This breaks symmetry.
+    Rotating colored patch.
   */
   const patchAngle=
     spin*1.35;
 
   const px=
-    Math.cos(patchAngle)*r*.52;
+    Math.cos(
+      patchAngle
+    )*
+    r*.52;
 
   const py=
-    Math.sin(patchAngle)*r*.52;
+    Math.sin(
+      patchAngle
+    )*
+    r*.52;
 
   const patch=
     ctx.createRadialGradient(
@@ -1545,7 +2902,7 @@ function drawRollingMarble(
   ctx.restore();
 
   /*
-    Moving specular highlight.
+    Moving highlight.
   */
   const hx=
     x+
@@ -1573,7 +2930,7 @@ function drawRollingMarble(
 
   highlight.addColorStop(
     0,
-    "rgba(255,255,255,.95)"
+    "rgba(255,255,255,.98)"
   );
 
   highlight.addColorStop(
@@ -1581,7 +2938,8 @@ function drawRollingMarble(
     "rgba(255,255,255,0)"
   );
 
-  ctx.fillStyle=highlight;
+  ctx.fillStyle=
+    highlight;
 
   ctx.beginPath();
 
@@ -1596,16 +2954,15 @@ function drawRollingMarble(
   ctx.fill();
 
   /*
-    Velocity trail.
-
-    This is based on the actual direction of travel,
-    NOT on the rotation angle.
+    Motion trail.
   */
   const trail=
     clamp(
       r*
-      (.65+
-      speedFactor*3.2),
+      (
+        .65+
+        speedFactor*3.2
+      ),
       2,
       34
     );
@@ -1629,9 +2986,11 @@ function drawRollingMarble(
       tx,
       ty,
       tx+
-        Math.cos(backAngle)*trail,
+        Math.cos(backAngle)*
+        trail,
       ty+
-        Math.sin(backAngle)*trail
+        Math.sin(backAngle)*
+        trail
     );
 
   trailGrad.addColorStop(
@@ -1644,7 +3003,8 @@ function drawRollingMarble(
     "rgba(255,255,255,0)"
   );
 
-  ctx.strokeStyle=trailGrad;
+  ctx.strokeStyle=
+    trailGrad;
 
   ctx.lineWidth=
     Math.max(
@@ -1661,9 +3021,11 @@ function drawRollingMarble(
 
   ctx.lineTo(
     tx+
-      Math.cos(backAngle)*trail,
+      Math.cos(backAngle)*
+      trail,
     ty+
-      Math.sin(backAngle)*trail
+      Math.sin(backAngle)*
+      trail
   );
 
   ctx.stroke();
@@ -1674,6 +3036,7 @@ function drawRollingMarble(
   if(selectedMarble){
 
     ctx.strokeStyle="#fff";
+
     ctx.lineWidth=
       Math.max(
         2,
@@ -1693,38 +3056,12 @@ function drawRollingMarble(
     ctx.stroke();
   }
 
-  /*
-    Impact flash.
-  */
-  if(speedFactor>0){
-
-    ctx.globalAlpha=
-      .12+
-      speedFactor*.10;
-
-    ctx.strokeStyle="#fff";
-
-    ctx.lineWidth=
-      Math.max(
-        .5,
-        r*.045
-      );
-
-    ctx.beginPath();
-
-    ctx.arc(
-      x,
-      y,
-      r*1.05,
-      0,
-      Math.PI*2
-    );
-
-    ctx.stroke();
-  }
-
   ctx.restore();
 }
+
+/* =========================================================
+   LABEL
+========================================================= */
 
 function drawNameLabel(
   m,
@@ -1750,7 +3087,9 @@ function drawNameLabel(
   ctx.textBaseline="middle";
 
   const textWidth=
-    ctx.measureText(m.name).width;
+    ctx.measureText(
+      m.name
+    ).width;
 
   const padX=7;
   const padY=4;
@@ -1792,8 +3131,11 @@ function drawNameLabel(
 
   if(selectedLabel){
 
-    ctx.strokeStyle=m.color;
+    ctx.strokeStyle=
+      m.color;
+
     ctx.lineWidth=2;
+
     ctx.stroke();
   }
 
@@ -1802,22 +3144,31 @@ function drawNameLabel(
   ctx.fillText(
     m.name,
     x,
-    boxY+boxH/2
+    boxY+
+    boxH/2
   );
 
   ctx.restore();
 }
 
 /* =========================================================
-   FIRST PERSON
+   FIRST PERSON TRACK
 ========================================================= */
 
-function drawFirstPersonTrack(camera){
+function drawFirstPersonTrack(
+  camera
+){
 
-  const me=marble[selected];
+  const me=
+    marble[selected];
+
   const sections=[];
 
-  for(let ds=-20;ds<=460;ds+=5){
+  for(
+    let ds=-20;
+    ds<=460;
+    ds+=5
+  ){
 
     const s=
       clamp(
@@ -1832,30 +3183,38 @@ function drawFirstPersonTrack(camera){
     const left={
       x:
         frame.p.x-
-        frame.n.x*ROAD_HALF,
+        frame.n.x*
+        ROAD_HALF,
 
       y:
         frame.p.y-
-        frame.n.y*ROAD_HALF
+        frame.n.y*
+        ROAD_HALF
     };
 
     const right={
       x:
         frame.p.x+
-        frame.n.x*ROAD_HALF,
+        frame.n.x*
+        ROAD_HALF,
 
       y:
         frame.p.y+
-        frame.n.y*ROAD_HALF
+        frame.n.y*
+        ROAD_HALF
     };
 
     const lookX=
       camera.x+
-      Math.cos(camera.angle)*100;
+      Math.cos(
+        camera.angle
+      )*100;
 
     const lookY=
       camera.y+
-      Math.sin(camera.angle)*100;
+      Math.sin(
+        camera.angle
+      )*100;
 
     const lp=
       project3D(
@@ -1890,7 +3249,11 @@ function drawFirstPersonTrack(camera){
         camera.height
       );
 
-    if(lp&&rp&&cp){
+    if(
+      lp&&
+      rp&&
+      cp
+    ){
 
       sections.push({
         lp,
@@ -1907,10 +3270,17 @@ function drawFirstPersonTrack(camera){
       a.cp.depth
   );
 
-  for(let i=0;i<sections.length-1;i++){
+  for(
+    let i=0;
+    i<sections.length-1;
+    i++
+  ){
 
-    const a=sections[i];
-    const b=sections[i+1];
+    const a=
+      sections[i];
+
+    const b=
+      sections[i+1];
 
     ctx.beginPath();
 
@@ -1937,20 +3307,26 @@ function drawFirstPersonTrack(camera){
     ctx.closePath();
 
     ctx.fillStyle=
-      Math.floor(a.s/18)%2===0
+      Math.floor(
+        a.s/18
+      )%2===0
         ?" #252b34".trim()
         :"#20262d";
 
     ctx.fill();
   }
 
-  for(const side of[-1,1]){
+  for(
+    const side of[-1,1]
+  ){
 
     ctx.beginPath();
 
     let started=false;
 
-    for(const section of sections){
+    for(
+      const section of sections
+    ){
 
       const p=
         side<0
@@ -1975,25 +3351,39 @@ function drawFirstPersonTrack(camera){
       }
     }
 
-    ctx.strokeStyle="#e7edf3";
+    ctx.strokeStyle=
+      "#e7edf3";
+
     ctx.lineWidth=3;
+
     ctx.stroke();
   }
 }
 
-function drawFirstPersonMarbles(camera){
+/* =========================================================
+   FIRST PERSON MARBLES
+========================================================= */
 
-  const me=marble[selected];
+function drawFirstPersonMarbles(
+  camera
+){
+
+  const me=
+    marble[selected];
+
   const visible=[];
 
   /*
-    IMPORTANT:
-    selected marble is NOT rendered here.
-    This prevents duplicate selected marbles.
+    Selected marble deliberately excluded.
   */
-  for(const m of marble){
+  for(
+    const m of marble
+  ){
 
-    if(m.id===selected||m.finished)
+    if(
+      m.id===selected||
+      m.finished
+    )
       continue;
 
     const relative=
@@ -2002,18 +3392,23 @@ function drawFirstPersonMarbles(camera){
     if(
       relative<-40||
       relative>450
-    )continue;
+    )
+      continue;
 
     const pos=
       marbleWorldPosition(m);
 
     const lookX=
       camera.x+
-      Math.cos(camera.angle)*100;
+      Math.cos(
+        camera.angle
+      )*100;
 
     const lookY=
       camera.y+
-      Math.sin(camera.angle)*100;
+      Math.sin(
+        camera.angle
+      )*100;
 
     const p=
       project3D(
@@ -2026,11 +3421,13 @@ function drawFirstPersonMarbles(camera){
         camera.height
       );
 
-    if(p)
+    if(p){
+
       visible.push({
         m,
         p
       });
+    }
   }
 
   visible.sort(
@@ -2039,10 +3436,15 @@ function drawFirstPersonMarbles(camera){
       a.p.depth
   );
 
-  for(const item of visible){
+  for(
+    const item of visible
+  ){
 
-    const m=item.m;
-    const p=item.p;
+    const m=
+      item.m;
+
+    const p=
+      item.p;
 
     const r=
       clamp(
@@ -2083,11 +3485,20 @@ function drawFirstPersonMarbles(camera){
   }
 }
 
-function drawFirstPersonObstacles(camera){
+/* =========================================================
+   FIRST PERSON OBSTACLES
+========================================================= */
 
-  const me=marble[selected];
+function drawFirstPersonObstacles(
+  camera
+){
 
-  for(const o of obstacles){
+  const me=
+    marble[selected];
+
+  for(
+    const o of obstacles
+  ){
 
     const relative=
       o.s-me.s;
@@ -2095,7 +3506,8 @@ function drawFirstPersonObstacles(camera){
     if(
       relative<-30||
       relative>460
-    )continue;
+    )
+      continue;
 
     const frame=
       trackFrame(o.s);
@@ -2103,20 +3515,26 @@ function drawFirstPersonObstacles(camera){
     const pos={
       x:
         frame.p.x+
-        frame.n.x*o.lane,
+        frame.n.x*
+        o.lane,
 
       y:
         frame.p.y+
-        frame.n.y*o.lane
+        frame.n.y*
+        o.lane
     };
 
     const lookX=
       camera.x+
-      Math.cos(camera.angle)*100;
+      Math.cos(
+        camera.angle
+      )*100;
 
     const lookY=
       camera.y+
-      Math.sin(camera.angle)*100;
+      Math.sin(
+        camera.angle
+      )*100;
 
     const p=
       project3D(
@@ -2129,12 +3547,14 @@ function drawFirstPersonObstacles(camera){
         camera.height
       );
 
-    if(!p)continue;
+    if(!p)
+      continue;
 
     const r=
       Math.max(
         2,
-        o.radius*p.scale
+        o.radius*
+        p.scale
       );
 
     ctx.fillStyle=
@@ -2161,7 +3581,7 @@ function drawFirstPersonObstacles(camera){
 }
 
 /* =========================================================
-   SPECTATOR CAMERA
+   SPECTATOR VIEW
 ========================================================= */
 
 function drawSpectatorView(){
@@ -2169,12 +3589,12 @@ function drawSpectatorView(){
   const camera=
     getSpectatorCamera();
 
-  /*
-    Sky.
-  */
   const sky=
     ctx.createLinearGradient(
-      0,0,0,H
+      0,
+      0,
+      0,
+      H
     );
 
   sky.addColorStop(
@@ -2193,6 +3613,7 @@ function drawSpectatorView(){
   );
 
   ctx.fillStyle=sky;
+
   ctx.fillRect(
     0,
     0,
@@ -2205,19 +3626,16 @@ function drawSpectatorView(){
 
   const sections=[];
 
-  /*
-    Much more visible track ahead.
-  */
   const start=
     clamp(
-      me.s-150,
+      me.s-160,
       0,
       TRACK_LENGTH-1
     );
 
   const end=
     clamp(
-      me.s+560,
+      me.s+600,
       0,
       TRACK_LENGTH-1
     );
@@ -2234,21 +3652,25 @@ function drawSpectatorView(){
     const left={
       x:
         frame.p.x-
-        frame.n.x*ROAD_HALF,
+        frame.n.x*
+        ROAD_HALF,
 
       y:
         frame.p.y-
-        frame.n.y*ROAD_HALF
+        frame.n.y*
+        ROAD_HALF
     };
 
     const right={
       x:
         frame.p.x+
-        frame.n.x*ROAD_HALF,
+        frame.n.x*
+        ROAD_HALF,
 
       y:
         frame.p.y+
-        frame.n.y*ROAD_HALF
+        frame.n.y*
+        ROAD_HALF
     };
 
     const center=
@@ -2275,7 +3697,11 @@ function drawSpectatorView(){
         camera
       );
 
-    if(center&&lp&&rp){
+    if(
+      center&&
+      lp&&
+      rp
+    ){
 
       sections.push({
         center,
@@ -2301,8 +3727,11 @@ function drawSpectatorView(){
     i++
   ){
 
-    const a=sections[i];
-    const b=sections[i+1];
+    const a=
+      sections[i];
+
+    const b=
+      sections[i+1];
 
     ctx.beginPath();
 
@@ -2329,7 +3758,9 @@ function drawSpectatorView(){
     ctx.closePath();
 
     ctx.fillStyle=
-      Math.floor(a.s/20)%2===0
+      Math.floor(
+        a.s/20
+      )%2===0
         ?" #303741".trim()
         :"#252b34";
 
@@ -2337,15 +3768,19 @@ function drawSpectatorView(){
   }
 
   /*
-    Bright road edges.
+    Road edges.
   */
-  for(const side of[-1,1]){
+  for(
+    const side of[-1,1]
+  ){
 
     ctx.beginPath();
 
     let first=true;
 
-    for(const section of sections){
+    for(
+      const section of sections
+    ){
 
       const p=
         side<0
@@ -2370,10 +3805,15 @@ function drawSpectatorView(){
       }
     }
 
-    ctx.strokeStyle="#f4f7fa";
+    ctx.strokeStyle=
+      "#f4f7fa";
+
     ctx.lineWidth=4;
+
     ctx.globalAlpha=.96;
+
     ctx.stroke();
+
     ctx.globalAlpha=1;
   }
 
@@ -2386,7 +3826,9 @@ function drawSpectatorView(){
     i+=5
   ){
 
-    const a=sections[i];
+    const a=
+      sections[i];
+
     const b=
       sections[
         Math.min(
@@ -2420,12 +3862,15 @@ function drawSpectatorView(){
   */
   const visibleObstacles=[];
 
-  for(const o of obstacles){
+  for(
+    const o of obstacles
+  ){
 
     if(
       o.s<start||
       o.s>end
-    )continue;
+    )
+      continue;
 
     const frame=
       trackFrame(o.s);
@@ -2433,11 +3878,13 @@ function drawSpectatorView(){
     const pos={
       x:
         frame.p.x+
-        frame.n.x*o.lane,
+        frame.n.x*
+        o.lane,
 
       y:
         frame.p.y+
-        frame.n.y*o.lane
+        frame.n.y*
+        o.lane
     };
 
     const p=
@@ -2448,11 +3895,13 @@ function drawSpectatorView(){
         camera
       );
 
-    if(p)
+    if(p){
+
       visibleObstacles.push({
         o,
         p
       });
+    }
   }
 
   visibleObstacles.sort(
@@ -2461,10 +3910,16 @@ function drawSpectatorView(){
       a.p.depth
   );
 
-  for(const item of visibleObstacles){
+  for(
+    const item of
+    visibleObstacles
+  ){
 
-    const o=item.o;
-    const p=item.p;
+    const o=
+      item.o;
+
+    const p=
+      item.p;
 
     const r=
       clamp(
@@ -2477,7 +3932,9 @@ function drawSpectatorView(){
 
     ctx.save();
 
-    if(o.type==="bumper"){
+    if(
+      o.type==="bumper"
+    ){
 
       const g=
         ctx.createRadialGradient(
@@ -2538,18 +3995,23 @@ function drawSpectatorView(){
   }
 
   /*
-    All marbles, including selected, rendered exactly once.
+    Marbles.
+    Each appears exactly once.
   */
   const visibleMarbles=[];
 
-  for(const m of marble){
+  for(
+    const m of marble
+  ){
 
-    if(m.finished)continue;
+    if(m.finished)
+      continue;
 
     if(
       m.s<start-20||
       m.s>end+20
-    )continue;
+    )
+      continue;
 
     const pos=
       marbleWorldPosition(m);
@@ -2562,11 +4024,13 @@ function drawSpectatorView(){
         camera
       );
 
-    if(p)
+    if(p){
+
       visibleMarbles.push({
         m,
         p
       });
+    }
   }
 
   visibleMarbles.sort(
@@ -2575,10 +4039,15 @@ function drawSpectatorView(){
       a.p.depth
   );
 
-  for(const item of visibleMarbles){
+  for(
+    const item of visibleMarbles
+  ){
 
-    const m=item.m;
-    const p=item.p;
+    const m=
+      item.m;
+
+    const p=
+      item.p;
 
     const r=
       clamp(
@@ -2619,7 +4088,7 @@ function drawSpectatorView(){
   }
 
   /*
-    Spectator title.
+    Spectator header.
   */
   const following=
     marble[selected];
@@ -2636,7 +4105,9 @@ function drawSpectatorView(){
     `SPECTATOR • FOLLOWING ${following.name}`;
 
   const tw=
-    ctx.measureText(title).width;
+    ctx.measureText(
+      title
+    ).width;
 
   ctx.fillStyle=
     "rgba(0,0,0,.72)";
@@ -2679,6 +4150,7 @@ function drawSpectatorView(){
   ctx.save();
 
   const barW=220;
+
   const barX=
     W/2-barW/2;
 
@@ -2705,7 +4177,8 @@ function drawSpectatorView(){
   ctx.fillRect(
     barX,
     barY,
-    barW*speedPercent,
+    barW*
+    speedPercent,
     8
   );
 
@@ -2736,7 +4209,9 @@ function drawScene(){
   if(!raceRunning)
     return;
 
-  if(cameraMode==="spectator"){
+  if(
+    cameraMode==="spectator"
+  ){
 
     drawSpectatorView();
 
@@ -2746,12 +4221,20 @@ function drawScene(){
   const camera=
     getFirstPersonCamera();
 
-  drawFirstPersonTrack(camera);
-  drawFirstPersonObstacles(camera);
-  drawFirstPersonMarbles(camera);
+  drawFirstPersonTrack(
+    camera
+  );
+
+  drawFirstPersonObstacles(
+    camera
+  );
+
+  drawFirstPersonMarbles(
+    camera
+  );
 
   /*
-    First-person speed lines.
+    Speed lines.
   */
   const me=
     marble[selected];
@@ -2763,7 +4246,9 @@ function drawScene(){
       1
     );
 
-  if(speedRatio>.45){
+  if(
+    speedRatio>.45
+  ){
 
     ctx.save();
 
@@ -2773,7 +4258,11 @@ function drawScene(){
     ctx.strokeStyle="#fff";
     ctx.lineWidth=1;
 
-    for(let i=0;i<30;i++){
+    for(
+      let i=0;
+      i<30;
+      i++
+    ){
 
       const x=
         (i*127)%W;
@@ -2815,6 +4304,9 @@ function updateHUD(){
   const me=
     marble[selected];
 
+  /*
+    Current race position.
+  */
   const position=
     1+
     marble.filter(
@@ -2836,7 +4328,11 @@ function updateHUD(){
     `Speed: ${me.v.toFixed(1)}`;
 
   hudRight.innerHTML=
-    `${tracks[Number(trackSelect.value)]}<br>`+
+    `${tracks[
+      Number(
+        trackSelect.value
+      )
+    ]}<br>`+
     `${progress.toFixed(0)}% &nbsp; `+
     `${raceTime.toFixed(1)}s`;
 }
@@ -2848,7 +4344,9 @@ function updateHUD(){
 function runCountdown(){
 
   countdownActive=true;
-  countdown.style.display="flex";
+
+  countdown.style.display=
+    "flex";
 
   const sequence=[
     "3",
@@ -2861,9 +4359,13 @@ function runCountdown(){
 
   function next(){
 
-    if(i>=sequence.length){
+    if(
+      i>=sequence.length
+    ){
 
-      countdown.style.display="none";
+      countdown.style.display=
+        "none";
+
       countdownActive=false;
 
       beep(
@@ -2896,25 +4398,50 @@ function runCountdown(){
 }
 
 /* =========================================================
-   BANK / RACE CONTROL
+   BANK
 ========================================================= */
 
 function updateBank(){
 
   bankDisplay.textContent=
-    "$"+bank.toFixed(0);
+    "$"+
+    bank.toFixed(0);
 }
+
+/* =========================================================
+   START RACE
+========================================================= */
 
 function startRace(){
 
   let requestedBet=
     Math.max(
       1,
-      Number(betInput.value)||25
+      Number(
+        betInput.value
+      )||25
     );
 
-  if(requestedBet>bank)
+  if(
+    requestedBet>bank
+  ){
+
     requestedBet=bank;
+  }
+
+  /*
+    If bank is empty, don't start.
+  */
+  if(
+    requestedBet<=0
+  ){
+
+    alert(
+      "You need money to place a bet."
+    );
+
+    return;
+  }
 
   currentBet=
     requestedBet;
@@ -2924,16 +4451,28 @@ function startRace(){
 
   updateBank();
 
+  /*
+    The selected marble is read fresh from
+    the menu every time.
+  */
   selected=
-    Number(playerSelect.value);
+    Number(
+      playerSelect.value
+    );
 
   const seed=
-    Number(trackSelect.value)+1;
+    Number(
+      trackSelect.value
+    )+1+
+    Math.floor(
+      Math.random()*100000
+    );
 
   track=
     generateTrack(seed);
 
   generateObstacles(seed);
+
   createMarbles();
 
   raceTime=0;
@@ -2941,11 +4480,17 @@ function startRace(){
   raceRunning=true;
   paused=false;
   raceFinished=false;
+
   cameraMode="first";
 
-  menu.style.display="none";
-  finish.style.display="none";
-  hud.style.display="flex";
+  menu.style.display=
+    "none";
+
+  finish.style.display=
+    "none";
+
+  hud.style.display=
+    "flex";
 
   lastTime=
     performance.now();
@@ -2953,38 +4498,106 @@ function startRace(){
   runCountdown();
 }
 
-function restartRace(){
+/* =========================================================
+   RETURN TO MENU
+========================================================= */
+
+function returnToMenu(){
 
   /*
-    Refund the existing wager before starting
-    the replacement race.
+    The race has already settled its wager.
+    Just return to the menu so the player can
+    select a new marble.
+  */
+  raceRunning=false;
+
+  raceFinished=false;
+
+  paused=false;
+
+  finish.style.display=
+    "none";
+
+  hud.style.display=
+    "none";
+
+  menu.style.display=
+    "flex";
+
+  /*
+    Keep the currently selected marble highlighted
+    in the dropdown.
+  */
+  playerSelect.value=
+    String(selected);
+
+  updateBank();
+}
+
+/* =========================================================
+   SAME MARBLE
+========================================================= */
+
+function restartSameMarble(){
+
+  /*
+    Refund previous wager.
   */
   if(
     raceRunning||
     raceFinished
   ){
 
-    bank+=currentBet;
+    bank+=
+      currentBet;
+
     updateBank();
   }
+
+  /*
+    Preserve selected marble.
+  */
+  playerSelect.value=
+    String(selected);
 
   startRace();
 }
 
+/* =========================================================
+   FINISH
+========================================================= */
+
 function finishRace(){
 
   raceFinished=true;
+
   raceRunning=false;
 
-  hud.style.display="none";
-  finish.style.display="flex";
+  hud.style.display=
+    "none";
+
+  finish.style.display=
+    "flex";
 
   const sorted=
     [...marble].sort(
-      (a,b)=>
-        a.place&&b.place
-          ?a.place-b.place
-          :b.s-a.s
+      (a,b)=>{
+
+        if(
+          a.place&&
+          b.place
+        ){
+
+          return(
+            a.place-
+            b.place
+          );
+        }
+
+        return(
+          b.s-a.s
+        );
+      }
     );
 
   const winner=
@@ -2992,12 +4605,15 @@ function finishRace(){
 
   let payout=0;
 
-  if(winner.id===selected){
+  if(
+    winner.id===selected
+  ){
 
     payout=
       currentBet*3;
 
-    bank+=payout;
+    bank+=
+      payout;
 
     finishTitle.textContent=
       `🏆 ${winner.name} wins!`;
@@ -3012,43 +4628,62 @@ function finishRace(){
 
   results.innerHTML="";
 
-  sorted.forEach((m,i)=>{
+  sorted.forEach(
+    (m,i)=>{
 
-    const div=
-      document.createElement("div");
+      const div=
+        document.createElement(
+          "div"
+        );
 
-    div.className="result";
+      div.className="result";
 
-    const place=
-      i===0
-        ?"🥇"
-        :i===1
-          ?"🥈"
-          :i===2
-            ?"🥉"
-            :`${i+1}.`;
+      const place=
+        i===0
+          ?"🥇"
+          :i===1
+            ?"🥈"
+            :i===2
+              ?"🥉"
+              :`${i+1}.`;
 
-    div.innerHTML=
-      `<span>${place} `+
-      `<b style="color:${m.color}">${m.name}</b></span>`+
-      `<span>${
-        m.finishTime
-          ?m.finishTime.toFixed(2)+"s"
-          :""
-      }</span>`;
+      div.innerHTML=
+        `<span>${place} `+
+        `<b style="color:${m.color}">`+
+        `${m.name}`+
+        `</b></span>`+
+        `<span>${
+          m.finishTime
+            ?m.finishTime.toFixed(2)+"s"
+            :""
+        }</span>`;
 
-    results.appendChild(div);
-  });
+      results.appendChild(
+        div
+      );
+    }
+  );
 
-  if(payout>0){
+  if(
+    payout>0
+  ){
 
     const payoutDiv=
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
 
-    payoutDiv.style.marginTop="15px";
-    payoutDiv.style.textAlign="center";
-    payoutDiv.style.color="#67e8a5";
-    payoutDiv.style.fontWeight="bold";
+    payoutDiv.style.marginTop=
+      "15px";
+
+    payoutDiv.style.textAlign=
+      "center";
+
+    payoutDiv.style.color=
+      "#67e8a5";
+
+    payoutDiv.style.fontWeight=
+      "bold";
 
     payoutDiv.textContent=
       `You won $${payout}!`;
@@ -3057,10 +4692,24 @@ function finishRace(){
       payoutDiv
     );
   }
+
+  /*
+    Allow immediate selection of another marble
+    by returning to the menu.
+  */
+  setTimeout(
+    ()=>{
+      /*
+        Don't automatically return;
+        user gets to inspect the results first.
+      */
+    },
+    0
+  );
 }
 
 /* =========================================================
-   INPUT
+   BUTTONS
 ========================================================= */
 
 document
@@ -3070,22 +4719,34 @@ document
     startRace
   );
 
-document
-  .getElementById("restartBtn")
-  .addEventListener(
-    "click",
-    restartRace
-  );
+restartBtn.addEventListener(
+  "click",
+  restartSameMarble
+);
+
+newRaceBtn.addEventListener(
+  "click",
+  returnToMenu
+);
+
+/* =========================================================
+   KEYBOARD
+========================================================= */
 
 addEventListener(
   "keydown",
   e=>{
 
     if(
-      document.activeElement===betInput&&
+      document.activeElement===
+      betInput&&
       e.key!=="Escape"
-    )return;
+    )
+      return;
 
+    /*
+      Camera.
+    */
     if(
       e.key.toLowerCase()==="v"
     ){
@@ -3104,6 +4765,9 @@ addEventListener(
       );
     }
 
+    /*
+      Restart.
+    */
     if(
       e.key.toLowerCase()==="r"
     ){
@@ -3113,10 +4777,13 @@ addEventListener(
         raceFinished
       ){
 
-        restartRace();
+        restartSameMarble();
       }
     }
 
+    /*
+      Mute.
+    */
     if(
       e.key.toLowerCase()==="m"
     ){
@@ -3129,7 +4796,12 @@ addEventListener(
       );
     }
 
-    if(e.code==="Space"){
+    /*
+      Pause.
+    */
+    if(
+      e.code==="Space"
+    ){
 
       e.preventDefault();
 
@@ -3142,6 +4814,9 @@ addEventListener(
       }
     }
 
+    /*
+      Spectator selection.
+    */
     if(
       e.key>="1"&&
       e.key<="8"
@@ -3150,8 +4825,18 @@ addEventListener(
       const n=
         Number(e.key)-1;
 
-      if(marble[n])
+      if(
+        marble[n]
+      ){
+
         selected=n;
+
+        /*
+          Keep menu selection synchronized too.
+        */
+        playerSelect.value=
+          String(n);
+      }
     }
   }
 );
@@ -3163,14 +4848,11 @@ addEventListener(
 function frame(now){
 
   let dt=
-    (now-lastTime)/1000;
+    (now-lastTime)/
+    1000;
 
   lastTime=now;
 
-  /*
-    Prevent huge physics jumps when the browser
-    gets temporarily stalled.
-  */
   dt=
     clamp(
       dt,
@@ -3179,15 +4861,21 @@ function frame(now){
     );
 
   update(dt);
+
   drawScene();
+
   updateHUD();
 
-  requestAnimationFrame(frame);
+  requestAnimationFrame(
+    frame
+  );
 }
 
 updateBank();
 
-requestAnimationFrame(frame);
+requestAnimationFrame(
+  frame
+);
 
 </script>
 </body>
