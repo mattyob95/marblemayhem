@@ -1298,62 +1298,311 @@ function nextTrack(){
 }
 
 
-/* DRAW WORLD */
+function drawFirstPerson() {
+  // Sky / horizon
+  x.fillStyle = '#07111f';
+  x.fillRect(0, 0, W, H);
 
-function drawWorld(){
+  // Horizon glow
+  const horizon = H * 0.36;
+  const sky = x.createLinearGradient(0, 0, 0, horizon);
+  sky.addColorStop(0, '#07111f');
+  sky.addColorStop(1, '#18314a');
+  x.fillStyle = sky;
+  x.fillRect(0, 0, W, horizon);
 
-  /* GRASS */
+  // Ground
+  x.fillStyle = '#102516';
+  x.fillRect(0, horizon, W, H - horizon);
 
-  x.fillStyle = '#163b28';
+  const me = marble.find(m => m.id === selected) || marble[0];
+  if (!me || !track.length) return;
 
-  x.fillRect(
-    -10000,
-    -10000,
-    20000,
-    20000
-  );
+  // Find camera position on the track
+  const s = Math.max(0, Math.min(track.length - 2, Math.floor(me.s)));
 
+  const pos = sample(me.s);
+  const tangent = tan(me.s);
 
-  /* TRACK */
+  // Camera position is slightly above the marble
+  const camX = pos.x;
+  const camY = pos.y;
 
-  x.lineCap = 'round';
-  x.lineJoin = 'round';
+  // Track width
+  const ROAD_WIDTH = 82;
 
+  /*
+    Perspective projection.
 
-  function drawPath(width,color,dash){
+    depth = distance in front of the marble
+    screenY approaches the horizon as depth increases
+  */
+  const horizonY = H * 0.36;
+  const cameraHeight = 7;
+  const focal = H * 0.82;
 
-    x.strokeStyle = color;
-    x.lineWidth = width;
-    x.setLineDash(dash || []);
+  function project(wx, wy, depthOffset = 0) {
+    const dx = wx - camX;
+    const dy = wy - camY;
 
-    x.beginPath();
+    // Forward direction
+    const forwardX = tangent.x;
+    const forwardY = tangent.y;
 
-    for(let s=0;s<world.length;s++){
+    // Right direction
+    const rightX = -forwardY;
+    const rightY = forwardX;
 
-      const p = sample(s);
+    const forward = dx * forwardX + dy * forwardY + depthOffset;
+    const side = dx * rightX + dy * rightY;
 
-      if(s === 0){
+    if (forward < 1) return null;
 
-        x.moveTo(p.x,p.y);
+    const scale = focal / forward;
 
-      }else{
-
-        x.lineTo(p.x,p.y);
-
-      }
-
-    }
-
-    x.stroke();
-
-    x.setLineDash([]);
-
+    return {
+      x: W / 2 + side * scale,
+      y: horizonY + cameraHeight * scale,
+      scale,
+      depth: forward
+    };
   }
 
+  /*
+    Build the road from the camera forward.
+    We use track samples rather than drawing the original
+    top-down track.
+  */
+  const start = Math.max(0, me.s - 1);
+  const end = Math.min(track.length - 2, me.s + 140);
 
-  drawPath(100,'#9ca3ad');
-  drawPath(84,'#555d68');
-  drawPath(2,'#e7edf5',[18,18]);
+  const roadSegments = [];
+
+  for (let i = start; i < end; i += 1) {
+    const a = track[i];
+    const b = track[i + 1];
+
+    const ta = tan(i);
+    const tb = tan(i + 1);
+
+    const aLeft = {
+      x: a.x - ta.y * ROAD_WIDTH / 2,
+      y: a.y + ta.x * ROAD_WIDTH / 2
+    };
+
+    const aRight = {
+      x: a.x + ta.y * ROAD_WIDTH / 2,
+      y: a.y - ta.x * ROAD_WIDTH / 2
+    };
+
+    const bLeft = {
+      x: b.x - tb.y * ROAD_WIDTH / 2,
+      y: b.y + tb.x * ROAD_WIDTH / 2
+    };
+
+    const bRight = {
+      x: b.x + tb.y * ROAD_WIDTH / 2,
+      y: b.y - tb.x * ROAD_WIDTH / 2
+    };
+
+    const pl = project(aLeft.x, aLeft.y);
+    const pr = project(aRight.x, aRight.y);
+    const nl = project(bLeft.x, bLeft.y);
+    const nr = project(bRight.x, bRight.y);
+
+    if (!pl || !pr || !nl || !nr) continue;
+
+    roadSegments.push({
+      pl,
+      pr,
+      nl,
+      nr,
+      i
+    });
+  }
+
+  /*
+    Draw farthest road pieces first.
+  */
+  for (let i = roadSegments.length - 1; i >= 0; i--) {
+    const r = roadSegments[i];
+
+    x.beginPath();
+    x.moveTo(r.pl.x, r.pl.y);
+    x.lineTo(r.pr.x, r.pr.y);
+    x.lineTo(r.nr.x, r.nr.y);
+    x.lineTo(r.nl.x, r.nl.y);
+    x.closePath();
+
+    x.fillStyle =
+      Math.floor(r.i / 3) % 2 === 0
+        ? '#30343a'
+        : '#353a40';
+
+    x.fill();
+
+    // Road edge
+    x.strokeStyle = '#6c7278';
+    x.lineWidth = Math.max(1, r.pl.scale * 0.7);
+
+    x.beginPath();
+    x.moveTo(r.pl.x, r.pl.y);
+    x.lineTo(r.nl.x, r.nl.y);
+    x.moveTo(r.pr.x, r.pr.y);
+    x.lineTo(r.nr.x, r.nr.y);
+    x.stroke();
+
+    // Centre markings
+    if (r.i % 5 === 0) {
+      const mx1 = (r.pl.x + r.pr.x) / 2;
+      const my1 = (r.pl.y + r.pr.y) / 2;
+
+      const mx2 = (r.nl.x + r.nr.x) / 2;
+      const my2 = (r.nl.y + r.nr.y) / 2;
+
+      x.strokeStyle = '#e9e9e9';
+      x.lineWidth = Math.max(1, r.pl.scale * 1.5);
+
+      x.beginPath();
+      x.moveTo(mx1, my1);
+      x.lineTo(mx2, my2);
+      x.stroke();
+    }
+  }
+
+  /*
+    Draw hazards and other marbles using depth projection.
+  */
+  for (const m of marble) {
+    if (m.id === me.id) continue;
+
+    const relative = m.s - me.s;
+
+    // Don't render things that are far behind us
+    if (relative < -5) continue;
+
+    // Convert marble position to world coordinates
+    const mp = sample(m.s);
+
+    const p = project(mp.x, mp.y);
+
+    if (!p) continue;
+
+    const radius = Math.max(2, Math.min(34, 8 * p.scale));
+
+    // Shadow
+    x.beginPath();
+    x.ellipse(
+      p.x,
+      p.y + radius * 0.55,
+      radius * 1.15,
+      radius * 0.4,
+      0,
+      0,
+      Math.PI * 2
+    );
+
+    x.fillStyle = 'rgba(0,0,0,.35)';
+    x.fill();
+
+    // Marble
+    const gradient = x.createRadialGradient(
+      p.x - radius * .35,
+      p.y - radius * .4,
+      radius * .1,
+      p.x,
+      p.y,
+      radius
+    );
+
+    gradient.addColorStop(0, '#ffffff');
+    gradient.addColorStop(.18, m.color);
+    gradient.addColorStop(1, '#111');
+
+    x.beginPath();
+    x.arc(p.x, p.y, radius, 0, Math.PI * 2);
+    x.fillStyle = gradient;
+    x.fill();
+
+    // Name when close enough
+    if (radius > 10) {
+      x.font = `${Math.max(9, radius * .9)}px Arial`;
+      x.textAlign = 'center';
+      x.fillStyle = '#fff';
+      x.fillText(m.name, p.x, p.y - radius - 5);
+    }
+  }
+
+  /*
+    Add subtle speed/camera effect.
+  */
+  const speedAmount = Math.min(1, Math.abs(me.v || 0) / 8);
+
+  if (speedAmount > 0.1) {
+    x.strokeStyle = `rgba(255,255,255,${speedAmount * .12})`;
+    x.lineWidth = 2;
+
+    for (let i = 0; i < 8; i++) {
+      const yy = horizonY + Math.random() * (H - horizonY);
+
+      x.beginPath();
+      x.moveTo(Math.random() * W, yy);
+      x.lineTo(
+        W / 2 + (Math.random() - .5) * 100,
+        yy - 20 - speedAmount * 30
+      );
+      x.stroke();
+    }
+  }
+
+  /*
+    Cockpit-style lower edge.
+    This helps make it feel like the camera is attached
+    to the marble rather than floating above the track.
+  */
+  const cockpit = x.createLinearGradient(0, H * .78, 0, H);
+  cockpit.addColorStop(0, 'rgba(0,0,0,0)');
+  cockpit.addColorStop(1, 'rgba(0,0,0,.65)');
+
+  x.fillStyle = cockpit;
+  x.fillRect(0, H * .72, W, H * .28);
+
+  // Small reticle
+  x.strokeStyle = 'rgba(255,255,255,.35)';
+  x.lineWidth = 1;
+
+  x.beginPath();
+  x.moveTo(W / 2 - 8, H * .58);
+  x.lineTo(W / 2 + 8, H * .58);
+  x.moveTo(W / 2, H * .58 - 8);
+  x.lineTo(W / 2, H * .58 + 8);
+  x.stroke();
+}
+
+
+function draw() {
+  x.clearRect(0, 0, W, H);
+
+  if (firstPerson && state === 'race') {
+    drawFirstPerson();
+  } else {
+    drawWorld();
+  }
+
+  /*
+    Existing HUD / overlays remain on top.
+  */
+
+  if (paused) {
+    x.fillStyle = 'rgba(0,0,0,.55)';
+    x.fillRect(0, 0, W, H);
+
+    x.fillStyle = '#fff';
+    x.font = 'bold 42px Arial';
+    x.textAlign = 'center';
+    x.fillText('PAUSED', W / 2, H / 2);
+  }
+}
 
 
   /* OBSTACLES */
@@ -1593,44 +1842,6 @@ function drawWorld(){
 }
 
 
-/* DRAW */
-
-function draw(){
-
-  x.clearRect(
-    0,
-    0,
-    W,
-    H
-  );
-
-
-  if(
-    firstPerson &&
-    marbles.length &&
-    (
-      phase === 'race' ||
-      phase === 'count'
-    )
-  ){
-
-    const player =
-      marbles[selected];
-
-
-    if(player){
-
-      const safeS =
-        Math.max(0,player.s);
-
-      const p =
-        sample(safeS);
-
-      const t =
-        tan(safeS);
-
-
-      x.save();
 
 
       /* CAMERA POSITION */
