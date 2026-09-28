@@ -369,26 +369,64 @@ cameraAngle=Math.PI/2;
 
 function setupMenu(){
 
-document.getElementById('picks').innerHTML=
-names.map((n,i)=>`
+    const picks=document.getElementById('picks');
+    const bets=document.getElementById('bets');
+    const bankEl=document.getElementById('bank');
 
-<button class="marblePick ${i===selected?'sel':''}" data-i="${i}">
+    if(!picks || !bets) return;
 
-<span class="ball" style="background:${colors[i]}"></span>
+    picks.innerHTML='';
 
-${n}
+    names.forEach((n,i)=>{
 
-</button>
+        const button=document.createElement('button');
 
-`).join('');
+        button.className='marblePick'+
+            (i===selected?' sel':'');
 
-document.querySelectorAll('.marblePick').forEach(b=>{
+        button.innerHTML=
+            '<span class="ball" style="background:'+colors[i]+'"></span>'+
+            n;
 
-b.onclick=()=>{
+        button.addEventListener('click',function(){
 
-selected=+b.dataset.i;
+            selected=i;
+            setupMenu();
 
-setupMenu();
+        });
+
+        picks.appendChild(button);
+
+    });
+
+    bets.innerHTML='';
+
+    [50,100,250].forEach(v=>{
+
+        const button=document.createElement('button');
+
+        button.textContent='$'+v;
+
+        if(v===bet){
+            button.classList.add('on');
+        }
+
+        button.addEventListener('click',function(){
+
+            bet=v;
+            setupMenu();
+
+        });
+
+        bets.appendChild(button);
+
+    });
+
+    if(bankEl){
+        bankEl.textContent=bank.toLocaleString();
+    }
+
+}
 
 };
 
@@ -662,10 +700,11 @@ of the race leader.
 
 let player=marbles[selected];
 
-if(player){
+if(player && world.length>2){
 
-let p=sample(player.s);
-let t=tan(player.s);
+let p=sample(
+    Math.max(0,player.s)
+);
 
 /*
 Small offset behind the marble.
@@ -1302,25 +1341,32 @@ requestAnimationFrame(loop);
 BUTTONS
 */
 
-document.getElementById('start')
-.onclick=start;
+const startButton=document.getElementById('start');
+const againButton=document.getElementById('again');
+const nextButton=document.getElementById('next');
 
-document.getElementById('again')
-.onclick=()=>{
+if(startButton){
+    startButton.addEventListener('click',start);
+}
 
-document.getElementById('finish')
-.classList.add('hidden');
+if(againButton){
+    againButton.addEventListener('click',()=>{
 
-make();
+        document.getElementById('finish')
+            .classList.add('hidden');
 
-phase='count';
-count=3;
-ct=0;
+        make();
 
-};
+        phase='count';
+        count=3;
+        ct=0;
 
-document.getElementById('next')
-.onclick=nextTrack;
+    });
+}
+
+if(nextButton){
+    nextButton.addEventListener('click',nextTrack);
+}
 
 /*
 KEYBOARD
@@ -1328,56 +1374,37 @@ KEYBOARD
 
 addEventListener('keydown',e=>{
 
-/*
-R = restart/menu
-*/
+    if(e.key.toLowerCase()==='r'){
 
-if(e.key.toLowerCase()==='r'){
+        phase='menu';
 
-phase='menu';
+        document.getElementById('finish')
+            .classList.add('hidden');
 
-document.getElementById('finish')
-.classList.add('hidden');
+        document.getElementById('menu')
+            .classList.remove('hidden');
 
-document.getElementById('menu')
-.classList.remove('hidden');
+        setupMenu();
 
-setupMenu();
+    }
 
-}
+    if(e.key.toLowerCase()==='m'){
+        muted=!muted;
+    }
 
-/*
-M = mute
-*/
+    if(e.code==='Space'){
 
-if(e.key.toLowerCase()==='m'){
+        e.preventDefault();
 
-muted=!muted;
+        paused=!paused;
 
-}
+    }
 
-/*
-SPACE = pause
-*/
+    if(e.key.toLowerCase()==='v'){
 
-if(e.code==='Space'){
+        firstPerson=!firstPerson;
 
-e.preventDefault();
-
-paused=!paused;
-
-}
-
-/*
-V = switch between first-person
-and spectator camera
-*/
-
-if(e.key.toLowerCase()==='v'){
-
-firstPerson=!firstPerson;
-
-}
+    }
 
 });
 
@@ -1385,9 +1412,30 @@ firstPerson=!firstPerson;
 INITIALIZE
 */
 
-setupMenu();
-resize();
-requestAnimationFrame(loop);
+function initializeGame(){
+
+    try{
+
+        setupMenu();
+        resize();
+
+        requestAnimationFrame(loop);
+
+    }catch(error){
+
+        console.error(
+            'MARBLE MAYHEM INITIALIZATION ERROR:',
+            error
+        );
+
+        document.getElementById('menu')
+            .classList.remove('hidden');
+
+    }
+
+}
+
+initializeGame();
 
 </script>
 
