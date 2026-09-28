@@ -25,7 +25,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%}.glass{background:var(--
 </main>
 <script>
 const cv=document.getElementById('c'),x=cv.getContext('2d'),app=document.getElementById('app');let W,H,D=1,last=0,phase='menu',count=3,ct=0,muted=false,paused=false,trackIndex=0,round=1,bank=1000,selected=0,bet=100,marbles=[],world=[],cam=0,finishOrder=[],audio=null;
-const names=['Ruby','Blue','Gold','Mint','Violet','Orange','Cyan','Pink'],colors=['#ff4d67','#4da3ff','#ffd34d','#61e38a','#b476ff','#ff934d','#35d9c6','#ff69c9'];
+const names=['fetson', 'doober', 'fadgeril', 'scrappy doo', 'scubadaa', 'pisswolf', 'malty', 'morning roll'],colors=['#ff4d67','#4da3ff','#ffd34d','#61e38a','#b476ff','#ff934d','#35d9c6','#ff69c9'];
 const hazards=['Ramps','Funnels','Spinner','Split Path','Water','Bumper Gate','Gravity Well','S-Curve','Double Spinner','Ice Bridge','Pinball Alley','River Jump'];
 function resize(){D=Math.min(devicePixelRatio||1,2);W=app.clientWidth;H=app.clientHeight;cv.width=W*D;cv.height=H*D;x.setTransform(D,0,0,D,0,0);build();}addEventListener('resize',resize);
 function rng(i){return (Math.sin(i*999.1+trackIndex*91.7)*43758.5)%1}
